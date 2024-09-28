@@ -8,9 +8,18 @@
 #pragma once
 
 // Forward declarations of C++ defined types
-
+// Forward declaration of `GenerateOptions` to properly resolve imports.
+namespace margelo::nitro::totp { struct GenerateOptions; }
+// Forward declaration of `GenerateSecretKeyOptions` to properly resolve imports.
+namespace margelo::nitro::totp { struct GenerateSecretKeyOptions; }
 
 // Include C++ defined types
+#if __has_include("GenerateOptions.hpp")
+ #include "GenerateOptions.hpp"
+#endif
+#if __has_include("GenerateSecretKeyOptions.hpp")
+ #include "GenerateSecretKeyOptions.hpp"
+#endif
 #if __has_include(<optional>)
  #include <optional>
 #endif
@@ -27,6 +36,22 @@ namespace margelo::nitro::totp::bridge::swift {
   using std__optional_double_ = std::optional<double>;
   inline std::optional<double> create_std__optional_double_(const double& value) {
     return std::optional<double>(value);
+  }
+  
+  /**
+   * Specialized version of `std::optional<GenerateSecretKeyOptions>`.
+   */
+  using std__optional_GenerateSecretKeyOptions_ = std::optional<GenerateSecretKeyOptions>;
+  inline std::optional<GenerateSecretKeyOptions> create_std__optional_GenerateSecretKeyOptions_(const GenerateSecretKeyOptions& value) {
+    return std::optional<GenerateSecretKeyOptions>(value);
+  }
+  
+  /**
+   * Specialized version of `std::optional<GenerateOptions>`.
+   */
+  using std__optional_GenerateOptions_ = std::optional<GenerateOptions>;
+  inline std::optional<GenerateOptions> create_std__optional_GenerateOptions_(const GenerateOptions& value) {
+    return std::optional<GenerateOptions>(value);
   }
 
 } // namespace margelo::nitro::totp::bridge::swift

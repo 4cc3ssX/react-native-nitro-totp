@@ -1,5 +1,5 @@
 {
-  "name": "react-native-nitro-template",
+  "name": "react-native-nitro-totp",
   "version": "0.0.1",
   "description": "A template for Nitro Modules.",
   "main": "lib/index",

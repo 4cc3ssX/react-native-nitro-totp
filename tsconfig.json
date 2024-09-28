@@ -1,11 +1,15 @@
 {
   "include": [
-    "src"
+    "src",
+    "example"
   ],
   "compilerOptions": {
     "composite": true,
     "outDir": "lib",
-    "rootDir": "src",
+    "baseUrl": "./",
+    "paths": {
+      "react-native-nitro-totp": ["./src/index"]
+    },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,

@@ -1,4 +1,4 @@
-# react-native-nitro-template
+# react-native-nitro-totp
 
 This is a template for Nitro Modules.
 
