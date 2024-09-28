@@ -1,11 +1,11 @@
 {
-  "cxxNamespace": ["<<cxxNamespace>>"],
+  "cxxNamespace": ["totp"],
   "ios": {
-    "iosModulename": "<<iosModulename>>"
+    "iosModulename": "NitroTotp"
   },
   "android": {
-    "androidNamespace": ["<<androidNamespace>>"],
-    "androidCxxLibName": "<<androidCxxLibName>>"
+    "androidNamespace": ["totp"],
+    "androidCxxLibName": "NitroTotp"
   },
   "autolinking": {},
   "ignorePaths": ["node_modules"]

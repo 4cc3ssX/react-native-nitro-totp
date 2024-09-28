@@ -1,6 +1,6 @@
 //
-//  <<iosModulename>>OnLoad.mm
-//  <<iosModulename>>
+//  NitroTotpOnLoad.mm
+//  NitroTotp
 //
 //  Created by Marc Rousavy on 22.07.24.
 //
@@ -8,10 +8,10 @@
 #import <Foundation/Foundation.h>
 #import <NitroModules/HybridObjectRegistry.hpp>
 
-@interface <<iosModulename>>OnLoad : NSObject
+@interface NitroTotpOnLoad : NSObject
 @end
 
-@implementation <<iosModulename>>OnLoad
+@implementation NitroTotpOnLoad
 
 using namespace margelo::nitro;
 
