@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 
 import {StyleSheet, View, Text, TextInput, Button} from 'react-native';
 import {
+  defaultOptions,
   formatOTP,
   formatSecretKey,
   isSecretKeyValid,
@@ -16,6 +17,7 @@ export default function App() {
   const [secretKey, setSecretKey] = React.useState<string>('');
   const [otp, setOTP] = React.useState<string>('');
   const [isValid, setIsValid] = React.useState<boolean>(false);
+  const [authURL, setAuthURL] = React.useState<string>('');
 
   const {seconds, restart} = useTimer({
     autoStart: true,
@@ -24,10 +26,15 @@ export default function App() {
   });
 
   const onGenerateNewOTP = () => {
+    if (!secretKey) {
+      return;
+    }
+
     const secret = parseSecretKey(secretKey);
-    const generateOTP = NitroTotp.generate(secret);
-    const valid = NitroTotp.validate(secret, generateOTP);
-    setOTP(formatOTP(generateOTP));
+    const generatedOTP = NitroTotp.generate(secret);
+    const valid = NitroTotp.validate(secret, generatedOTP);
+
+    setOTP(formatOTP(generatedOTP));
     setIsValid(valid);
 
     restart(dayjs().add(30, 'seconds').toDate());
@@ -45,6 +52,25 @@ export default function App() {
       setSecretKey(text);
     }
   };
+
+  useEffect(() => {
+    if (!secretKey) {
+      return;
+    }
+
+    const secret = parseSecretKey(secretKey);
+    const generatedAuthURL = NitroTotp.generateAuthURL({
+      secret,
+      issuer: 'NitroTotp',
+      label: 'NitroTotp',
+      period: defaultOptions.period,
+      digits: defaultOptions.digits,
+      issuerInLabel: false,
+      algorithm: defaultOptions.algorithm,
+    });
+
+    setAuthURL(generatedAuthURL);
+  }, [secretKey]);
 
   useEffect(() => {
     // generate secret key
@@ -67,6 +93,7 @@ export default function App() {
       <Text>OTP: {otp}</Text>
       <Text>Expire in: {seconds}</Text>
       <Text>Is Valid: {`${isValid}`}</Text>
+      <Text>{authURL}</Text>
       <Button title="Generate Secret Key" onPress={onPressGenerateSecretKey} />
     </View>
   );
