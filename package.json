@@ -51,14 +51,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrousavy/nitro.git"
+    "url": "git+https://github.com/4cc3ssX/react-native-nitro-totp.git"
   },
-  "author": "Marc Rousavy <me@mrousavy.com> (https://github.com/mrousavy)",
+  "author": "Ryam <heinmyatthu.workspace@gmail.com> (https://github.com/4cc3ssX)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mrousavy/nitro/issues"
+    "url": "https://github.com/4cc3ssX/react-native-nitro-totp/issues"
   },
-  "homepage": "https://github.com/mrousavy/nitro#readme",
+  "homepage": "https://github.com/4cc3ssX/react-native-nitro-totp#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
