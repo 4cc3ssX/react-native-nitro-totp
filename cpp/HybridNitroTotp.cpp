@@ -114,7 +114,9 @@ std::string HybridNitroTotp::generateAuthURL(const OTPAuthURLOptions &options) {
     int period = BaseGenerationOptions::period;
 
     if (options.secret.empty()) {
-        throw std::runtime_error("Secret is required");
+        const std::string message = "Secret is required.";
+        Logger::nativeLog(LogLevel::Error, "HybridNitroTotp:generateAuthURL", message);
+        throw std::runtime_error(message);
     }
 
     std::string secret = options.secret;

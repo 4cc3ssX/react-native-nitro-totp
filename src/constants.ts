@@ -7,7 +7,7 @@ export enum NitroTotpConstants {
 
 export const defaultOptions = {
   issuer: '',
-  label: '',
+  label: 'OTP Auth',
   length: NitroTotpConstants.DEFAULT_SECRET_SIZE,
   digits: NitroTotpConstants.DEFAULT_DIGITS,
   period: NitroTotpConstants.DEFAULT_PERIOD,
