@@ -45,7 +45,7 @@ export interface GenerateSecretKeyOptions {
   /**
    * The length of the secret key in bytes.
    * @type {number}
-   * @default 20
+   * @default 12
    */
   length?: number
 }
