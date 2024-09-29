@@ -7,12 +7,15 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "install:pods": "NO_FLIPPER=1 RCT_NEW_ARCH_ENABLED=1 yarn dlx -q pod-install"
   },
   "dependencies": {
+    "dayjs": "^1.11.13",
     "react": "18.3.1",
     "react-native": "0.75.3",
-    "react-native-nitro-modules": "^0.10.0"
+    "react-native-nitro-modules": "^0.10.0",
+    "react-timer-hook": "^3.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

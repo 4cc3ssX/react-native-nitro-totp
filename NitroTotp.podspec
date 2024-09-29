@@ -22,6 +22,8 @@ Pod::Spec.new do |s|
     "cpp/**/*.{hpp,cpp}",
   ]
 
+  s.dependency 'OpenSSL-Universal'
+
   load 'nitrogen/generated/ios/NitroTotp+autolinking.rb'
   add_nitrogen_files(s)
 

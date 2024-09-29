@@ -7,6 +7,16 @@
     "androidNamespace": ["totp"],
     "androidCxxLibName": "NitroTotp"
   },
-  "autolinking": {},
+  "autolinking": {
+    "NitroTotp": {
+      "cpp": "HybridNitroTotp"
+    },
+    "NitroSecret": {
+      "cpp": "HybridNitroSecret"
+    },
+    "NitroHOTP": {
+      "cpp": "HybridNitroHotp"
+    }
+  },
   "ignorePaths": ["node_modules"]
 }

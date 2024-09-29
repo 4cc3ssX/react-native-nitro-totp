@@ -16,8 +16,8 @@
 using namespace margelo::nitro;
 
 + (void)load {
-  // TODO: Register all Swift Hybrid Objects here
-  // TODO: Register all C++ Hybrid Objects here
+    // TODO: Register all Swift Hybrid Objects here
+    // TODO: Register all C++ Hybrid Objects here
 }
 
 @end

@@ -1,17 +1,17 @@
 import type { HybridObject } from 'react-native-nitro-modules'
 import type {
-  NitroTotpGenerateOptions,
-  NitroTotpValidateOptions,
+  NitroHOTPGenerateOptions,
+  NitroHOTPValidateOptions,
   OTPAuthURLOptions,
 } from '../types'
 
-export interface NitroTotp
+export interface NitroHOTP
   extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
-  generate(secret: string, options?: NitroTotpGenerateOptions): string
+  generate(secret: string, options?: NitroHOTPGenerateOptions): string
   validate(
     secret: string,
     otp: string,
-    options?: NitroTotpValidateOptions
+    options?: NitroHOTPValidateOptions
   ): boolean
   generateAuthURL(options: OTPAuthURLOptions): string
 }
