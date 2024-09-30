@@ -14,12 +14,10 @@ execute_process(
 
 execute_process(
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/../scripts/build-openssl.sh
-    android-23 "${CMAKE_CURRENT_SOURCE_DIR}/../cpp" ${ANDROID_HOME} ${ANDROID_NDK_ROOT}
+    ${ANDROID_PLATFORM} "${CMAKE_CURRENT_SOURCE_DIR}/../cpp" ${ANDROID_HOME} ${ANDROID_NDK_ROOT}
     OUTPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/build/openssl_build.txt
     ERROR_FILE ${CMAKE_CURRENT_SOURCE_DIR}/build/openssl_error.txt
 )
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../cpp/android-${ANDROID_ABI}/include)
 
 # Define C++ library and add all sources
 add_library(${PACKAGE_NAME} SHARED
@@ -41,6 +39,7 @@ include(${CMAKE_SOURCE_DIR}/../nitrogen/generated/android/NitroTotp+autolinking.
 include_directories(
         "src/main/cpp"
         "../cpp"
+        "${PROJECT_SOURCE_DIR}/../cpp/android-${ANDROID_ABI}/include"
 )
 
 find_library(LOG_LIB log)
