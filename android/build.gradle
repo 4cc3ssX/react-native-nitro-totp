@@ -90,6 +90,13 @@ android {
       }
     }
   }
+
+  packagingOptions {
+      pickFirst "lib/arm64-v8a/libjsi.so"
+      pickFirst "lib/armeabi-v7a/libjsi.so"
+      pickFirst "lib/x86/libjsi.so"
+      pickFirst "lib/x86_64/libjsi.so"
+  }
 }
 
 repositories {
