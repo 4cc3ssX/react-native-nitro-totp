@@ -26,10 +26,29 @@ const secret = NitroSecret.generate();
 // TOTP
 const otp = NitroTotp.generate(secret);
 const isValid = NitroTotp.validate(secret, otp);
+const generatedAuthURL = NitroTotp.generateAuthURL({
+  secret,
+  issuer: 'NitroTotp',
+  label: 'NitroTotp',
+  period: defaultOptions.period,
+  digits: defaultOptions.digits,
+  issuerInLabel: false,
+  algorithm: SupportedAlgorithm.SHA1,
+});
 
 // HOTP
 const otp = NitroHOTP.generate(secret);
 const isValid = NitroHOTP.validate(secret, otp);
+const generatedAuthURL = NitroHOTP.generateAuthURL({
+  secret,
+  issuer: 'NitroHotp',
+  label: 'NitroHotp',
+  counter: defaultOptions.counter,
+  digits: defaultOptions.digits,
+  issuerInLabel: false,
+  algorithm: SupportedAlgorithm.SHA1,
+});
+
 ```
 
 ## Generation Options

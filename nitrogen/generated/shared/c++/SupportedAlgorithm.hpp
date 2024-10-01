@@ -7,11 +7,7 @@
 
 #pragma once
 
-#if __has_include(<NitroModules/NitroHash.hpp>)
-#include <NitroModules/NitroHash.hpp>
-#else
-#error NitroModules cannot be found! Are you sure you installed NitroModules properly?
-#endif
+#include <cmath>
 #if __has_include(<NitroModules/JSIConverter.hpp>)
 #include <NitroModules/JSIConverter.hpp>
 #else
@@ -26,7 +22,7 @@
 namespace margelo::nitro::totp {
 
   /**
-   * An enum which can be represented as a JavaScript union (SupportedAlgorithm).
+   * An enum which can be represented as a JavaScript enum (SupportedAlgorithm).
    */
   enum class SupportedAlgorithm {
     SHA1      SWIFT_NAME(sha1) = 0,
@@ -40,42 +36,29 @@ namespace margelo::nitro {
 
   using namespace margelo::nitro::totp;
 
-  // C++ SupportedAlgorithm <> JS SupportedAlgorithm (union)
+  // C++ SupportedAlgorithm <> JS SupportedAlgorithm (enum)
   template <>
   struct JSIConverter<SupportedAlgorithm> {
     static inline SupportedAlgorithm fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
-      std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, arg);
-      switch (hashString(unionValue.c_str(), unionValue.size())) {
-        case hashString("SHA1"): return SupportedAlgorithm::SHA1;
-        case hashString("SHA256"): return SupportedAlgorithm::SHA256;
-        case hashString("SHA512"): return SupportedAlgorithm::SHA512;
-        default: [[unlikely]]
-          throw std::runtime_error("Cannot convert \"" + unionValue + "\" to enum SupportedAlgorithm - invalid value!");
-      }
+      int enumValue = JSIConverter<int>::fromJSI(runtime, arg);
+      return static_cast<SupportedAlgorithm>(enumValue);
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, SupportedAlgorithm arg) {
-      switch (arg) {
-        case SupportedAlgorithm::SHA1: return JSIConverter<std::string>::toJSI(runtime, "SHA1");
-        case SupportedAlgorithm::SHA256: return JSIConverter<std::string>::toJSI(runtime, "SHA256");
-        case SupportedAlgorithm::SHA512: return JSIConverter<std::string>::toJSI(runtime, "SHA512");
-        default: [[unlikely]]
-          throw std::runtime_error("Cannot convert SupportedAlgorithm to JS - invalid value: "
-                                    + std::to_string(static_cast<int>(arg)) + "!");
-      }
+      int enumValue = static_cast<int>(arg);
+      return JSIConverter<int>::toJSI(runtime, enumValue);
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
-      if (!value.isString()) {
+      if (!value.isNumber()) {
         return false;
       }
-      std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, value);
-      switch (hashString(unionValue.c_str(), unionValue.size())) {
-        case hashString("SHA1"):
-        case hashString("SHA256"):
-        case hashString("SHA512"):
-          return true;
-        default:
-          return false;
+      double integer;
+      double fraction = modf(value.getNumber(), &integer);
+      if (fraction != 0.0) {
+        // It is some kind of floating point number - our enums are ints.
+        return false;
       }
+      // Check if we are within the bounds of the enum.
+      return integer >= 0 && integer <= 2;
     }
   };
 

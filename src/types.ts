@@ -1,4 +1,8 @@
-export type SupportedAlgorithm = 'SHA1' | 'SHA256' | 'SHA512'
+export enum SupportedAlgorithm {
+  SHA1,
+  SHA256,
+  SHA512,
+}
 
 export interface OTPAuthURLOptions extends BaseGenerateOptions {
   /**
@@ -79,7 +83,7 @@ export interface BaseGenerateOptions {
   /**
    * The algorithm to use for generating the OTP.
    * @type {SupportedAlgorithm}
-   * @default 'SHA1'
+   * @default SupportedAlgorithm.SHA1
    */
   algorithm?: SupportedAlgorithm
 }
