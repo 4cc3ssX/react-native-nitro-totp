@@ -1,6 +1,6 @@
 {
   "name": "react-native-nitro-totp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "React Native module for TOTP (Time-based One-Time Password) and HOTP (HMAC-based One-Time Password) authentication.",
   "main": "lib/index",
   "module": "lib/index",
