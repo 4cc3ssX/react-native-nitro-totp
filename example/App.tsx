@@ -9,6 +9,7 @@ import {
   NitroSecret,
   NitroTotp,
   parseSecretKey,
+  SupportedAlgorithm,
 } from 'react-native-nitro-totp';
 import {useTimer} from 'react-timer-hook';
 import dayjs from 'dayjs';
@@ -66,7 +67,7 @@ export default function App() {
       period: defaultOptions.period,
       digits: defaultOptions.digits,
       issuerInLabel: false,
-      algorithm: defaultOptions.algorithm,
+      algorithm: SupportedAlgorithm.SHA1,
     });
 
     setAuthURL(generatedAuthURL);
@@ -93,7 +94,7 @@ export default function App() {
       <Text>OTP: {otp}</Text>
       <Text>Expire in: {seconds}</Text>
       <Text>Is Valid: {`${isValid}`}</Text>
-      <Text>{authURL}</Text>
+      <Text selectable>{authURL}</Text>
       <Button title="Generate Secret Key" onPress={onPressGenerateSecretKey} />
     </View>
   );
