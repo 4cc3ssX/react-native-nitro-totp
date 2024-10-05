@@ -51,7 +51,7 @@ build_android_clang() {
   echo ""
 
   # Check if the architecture is already built
-  if [ -d "../$OUTPUT_DIR/android-${ABI}" ]; then
+  if [ -d "$OUTPUT_DIR/android-${ABI}" ]; then
     echo "Skipping build for ${ABI} since it already exists."
     return
   fi

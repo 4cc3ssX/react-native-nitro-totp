@@ -91,9 +91,53 @@ android {
     }
   }
 
-  packagingOptions {
-      pickFirst "**/libjsi.so"
+  // Add a custom task for compiling OpenSSL
+  tasks.register("compileOpenSSL") {
+    // Define required environment variables
+    def androidPlatform = System.getenv("ANDROID_PLATFORM") ?: "android-21"
+    def outputDir = file("../cpp").absolutePath
+    def androidHome = System.getenv("ANDROID_HOME") ?: "${System.getenv("HOME")}/Android/Sdk"
+    def androidNdkRoot = System.getenv("ANDROID_NDK_ROOT") ?: "${androidHome}/ndk-bundle"
+    def androidAbi = System.getenv("ANDROID_ABI") ?: "armeabi-v7a" // Default to armeabi-v7a if not set
+    def opensslLibDir = file("../cpp/android-${androidAbi}")
+    def opensslLibs = ["libcrypto.a", "libssl.a"]
+
+    // Check if the required OpenSSL libraries exist
+    doLast {
+      def missingLibs = opensslLibs.findAll { lib ->
+        !file("${opensslLibDir}/lib/${lib}").exists()
+      }
+
+      if (!missingLibs.isEmpty()) {
+        println "OpenSSL libraries not found, compiling..."
+
+        def compileScript = new File("../scripts/build-openssl.sh")
+
+        if (compileScript.exists()) {
+
+          // Pass the required arguments to the script
+          def result = exec {
+            environment "ANDROID_PLATFORM", androidPlatform
+            environment "OUTPUT_DIR", outputDir
+            environment "ANDROID_HOME", androidHome
+            environment "ANDROID_NDK_ROOT", androidNdkRoot
+            commandLine 'bash', compileScript.absolutePath
+          }
+
+          if (result.exitValue != 0) {
+            throw new GradleException("Failed to compile OpenSSL")
+          }
+        } else {
+          throw new GradleException("Compile script not found: ${compileScript.absolutePath}")
+        }
+      } else {
+        println "OpenSSL libraries found, skipping compilation."
+      }
+    }
   }
+
+  // Ensure this task runs before the build process
+  preBuild.dependsOn tasks.named("compileOpenSSL")
 }
 
 repositories {
