@@ -14,7 +14,7 @@
     "dayjs": "^1.11.13",
     "react": "18.3.1",
     "react-native": "0.75.3",
-    "react-native-nitro-modules": "^0.10.0",
+    "react-native-nitro-modules": "^0.11.0",
     "react-timer-hook": "^3.0.7"
   },
   "devDependencies": {

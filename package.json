@@ -27,7 +27,7 @@
   "scripts": {
     "postinstall": "tsc || exit 0;",
     "typecheck": "tsc --noEmit",
-    "clean": "del-cli android/build node_modules/**/android/build lib",
+    "clean": "del-cli android/build node_modules/**/android/build example/android/**/build lib",
     "lint": "eslint \"**/*.{js,ts,tsx}\" --fix",
     "lint-ci": "eslint \"**/*.{js,ts,tsx}\" -f @jamesacarr/github-actions",
     "typescript": "tsc --noEmit false",
@@ -117,5 +117,6 @@
     "trailingComma": "es5",
     "useTabs": false,
     "semi": false
-  }
+  },
+  "packageManager": "yarn@4.5.0"
 }

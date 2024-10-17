@@ -8,6 +8,14 @@ set (CMAKE_CXX_STANDARD 20)
 # Define C++ library and add all sources
 add_library(${PACKAGE_NAME} SHARED
         src/main/cpp/cpp-adapter.cpp
+        ../cpp/HybridNitroTotp.cpp
+        ../cpp/HybridNitroHotp.cpp
+        ../cpp/HybridNitroSecret.cpp
+        ../cpp/Secret.cpp
+        ../cpp/Hmac.cpp
+        ../cpp/BaseOptions.cpp
+        ../cpp/Base32.cpp
+        ../cpp/Utils.cpp
 )
 
 # Add Nitrogen specs :)
@@ -21,9 +29,13 @@ include_directories(
 
 find_library(LOG_LIB log)
 
+find_package(openssl REQUIRED CONFIG)
+
 # Link all libraries together
 target_link_libraries(
         ${PACKAGE_NAME}
         ${LOG_LIB}
         android                                   # <-- Android core
+        openssl::crypto
+        openssl::ssl
 )
