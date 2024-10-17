@@ -1,8 +1,5 @@
 # react-native-nitro-totp
 
-# Help Wanted!
-Currently I'm working on android support and finding some blocking related to OpenSSL linkage and cannot compile example app successfully. See more [here](https://github.com/4cc3ssX/react-native-nitro-totp/pull/2).
-
 ## Installation
 ```
 # npm
