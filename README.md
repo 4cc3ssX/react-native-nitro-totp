@@ -1,5 +1,8 @@
 # react-native-nitro-totp
 
+# Help Wanted!
+Currently I'm working on android support and finding some blocking related to OpenSSL linkage and cannot compile example app successfully. See more [here](https://github.com/4cc3ssX/react-native-nitro-totp/pull/2).
+
 ## Installation
 ```
 # npm
@@ -26,10 +29,29 @@ const secret = NitroSecret.generate();
 // TOTP
 const otp = NitroTotp.generate(secret);
 const isValid = NitroTotp.validate(secret, otp);
+const generatedAuthURL = NitroTotp.generateAuthURL({
+  secret,
+  issuer: 'NitroTotp',
+  label: 'NitroTotp',
+  period: defaultOptions.period,
+  digits: defaultOptions.digits,
+  issuerInLabel: false,
+  algorithm: SupportedAlgorithm.SHA1,
+});
 
 // HOTP
 const otp = NitroHOTP.generate(secret);
 const isValid = NitroHOTP.validate(secret, otp);
+const generatedAuthURL = NitroHOTP.generateAuthURL({
+  secret,
+  issuer: 'NitroHotp',
+  label: 'NitroHotp',
+  counter: defaultOptions.counter,
+  digits: defaultOptions.digits,
+  issuerInLabel: false,
+  algorithm: SupportedAlgorithm.SHA1,
+});
+
 ```
 
 ## Generation Options
