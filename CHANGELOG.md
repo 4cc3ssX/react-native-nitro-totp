@@ -1,5 +1,12 @@
 
 
+## [1.1.0](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.0.0...v1.1.0) (2024-10-17)
+
+
+### 🐛 Bug Fixes
+
+* cpp and nitrogen should be included in package.json ([c84a3cb](https://github.com/4cc3ssX/react-native-nitro-totp/commit/c84a3cbbe780e5055f819d3f01080c1fba5201d3))
+
 ## [1.0.0](https://github.com/4cc3ssX/react-native-nitro-totp/compare/0.1.1...v1.0.0) (2024-10-17)
 
 
