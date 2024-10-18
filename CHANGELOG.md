@@ -1,5 +1,23 @@
 
 
+## [1.1.1](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.1.0...v1.1.1) (2024-10-18)
+
+
+### 🚀 Features
+
+* upgrade nitro modules ([b3ef7fe](https://github.com/4cc3ssX/react-native-nitro-totp/commit/b3ef7fec4eb95953a1f1e2978a9826aaf45c03db))
+
+
+### 🐛 Bug Fixes
+
+* minor changes ([b2f102c](https://github.com/4cc3ssX/react-native-nitro-totp/commit/b2f102c76714770ef1c6fce9a72a61febd3e4fdb))
+
+
+### 🧹 Chore
+
+* removed openssl build script ([fe32055](https://github.com/4cc3ssX/react-native-nitro-totp/commit/fe32055ff1426cd6121c072dda4a94b66ac0bcad))
+* upgrade openssl v3 ([70cc4e6](https://github.com/4cc3ssX/react-native-nitro-totp/commit/70cc4e61200294020a5bb16adc0838a92fdf7ebe))
+
 ## [1.1.0](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.0.0...v1.1.0) (2024-10-17)
 
 
