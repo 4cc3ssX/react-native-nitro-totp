@@ -6,5 +6,7 @@
 ///
 
 public final class NitroTotpAutolinking {
+  public typealias bridge = margelo.nitro.totp.bridge.swift
+
   
 }

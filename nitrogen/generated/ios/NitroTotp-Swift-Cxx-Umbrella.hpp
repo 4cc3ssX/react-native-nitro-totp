@@ -8,41 +8,10 @@
 #pragma once
 
 // Forward declarations of C++ defined types
-// Forward declaration of `GenerateSecretKeyOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct GenerateSecretKeyOptions; }
-// Forward declaration of `HybridNitroHOTPSpec` to properly resolve imports.
-namespace margelo::nitro::totp { class HybridNitroHOTPSpec; }
-// Forward declaration of `HybridNitroSecretSpec` to properly resolve imports.
-namespace margelo::nitro::totp { class HybridNitroSecretSpec; }
-// Forward declaration of `HybridNitroTotpSpec` to properly resolve imports.
-namespace margelo::nitro::totp { class HybridNitroTotpSpec; }
-// Forward declaration of `NitroHOTPGenerateOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct NitroHOTPGenerateOptions; }
-// Forward declaration of `NitroHOTPValidateOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct NitroHOTPValidateOptions; }
-// Forward declaration of `NitroTotpGenerateOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct NitroTotpGenerateOptions; }
-// Forward declaration of `NitroTotpValidateOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct NitroTotpValidateOptions; }
-// Forward declaration of `OTPAuthURLOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct OTPAuthURLOptions; }
-// Forward declaration of `SupportedAlgorithm` to properly resolve imports.
-namespace margelo::nitro::totp { enum class SupportedAlgorithm; }
+
 
 // Include C++ defined types
-#include "GenerateSecretKeyOptions.hpp"
-#include "HybridNitroHOTPSpec.hpp"
-#include "HybridNitroSecretSpec.hpp"
-#include "HybridNitroTotpSpec.hpp"
-#include "NitroHOTPGenerateOptions.hpp"
-#include "NitroHOTPValidateOptions.hpp"
-#include "NitroTotpGenerateOptions.hpp"
-#include "NitroTotpValidateOptions.hpp"
-#include "OTPAuthURLOptions.hpp"
-#include "SupportedAlgorithm.hpp"
-#include <memory>
-#include <optional>
-#include <string>
+
 
 // C++ helpers for Swift
 #include "NitroTotp-Swift-Cxx-Bridge.hpp"
@@ -54,12 +23,7 @@ namespace margelo::nitro::totp { enum class SupportedAlgorithm; }
 #include <NitroModules/PromiseHolder.hpp>
 
 // Forward declarations of Swift defined types
-// Forward declaration of `HybridNitroHOTPSpecCxx` to properly resolve imports.
-namespace NitroTotp { class HybridNitroHOTPSpecCxx; }
-// Forward declaration of `HybridNitroSecretSpecCxx` to properly resolve imports.
-namespace NitroTotp { class HybridNitroSecretSpecCxx; }
-// Forward declaration of `HybridNitroTotpSpecCxx` to properly resolve imports.
-namespace NitroTotp { class HybridNitroTotpSpecCxx; }
+
 
 // Include Swift defined types
 #if __has_include("NitroTotp-Swift.h")

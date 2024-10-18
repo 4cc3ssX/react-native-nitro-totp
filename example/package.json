@@ -1,5 +1,5 @@
 {
-  "name": "NitroTotpExample",
+  "name": "react-native-nitro-totp-example",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
     "dayjs": "^1.11.13",
     "react": "18.3.1",
     "react-native": "0.75.3",
-    "react-native-nitro-modules": "^0.11.0",
+    "react-native-nitro-modules": "^0.12.0",
     "react-timer-hook": "^3.0.7"
   },
   "devDependencies": {
