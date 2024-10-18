@@ -2896,7 +2896,7 @@ __metadata:
     prettier: "npm:2.8.8"
     react: "npm:18.3.1"
     react-native: "npm:0.75.3"
-    react-native-nitro-modules: "npm:^0.11.0"
+    react-native-nitro-modules: "npm:^0.12.0"
     react-test-renderer: "npm:18.3.1"
     react-timer-hook: "npm:^3.0.7"
     typescript: "npm:5.0.4"
@@ -7874,13 +7874,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-nitro-modules@npm:^0.11.0":
-  version: 0.11.0
-  resolution: "react-native-nitro-modules@npm:0.11.0"
+"react-native-nitro-modules@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "react-native-nitro-modules@npm:0.12.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10/87b477a4f715c5209c87bdea5e1f48eacfe384e3c7e204361c4ef402d182256c683a809d37119ead157b40fd79794a274c82725e89b99ecc55f33b8356e9eab7
+  checksum: 10/a05f3f0aea38a37aea722fa704b81cd1a102cf24cc1a0bf5d16be73a1f18efa56ab58ba155ba32acff79d0ed46274b0b46ad545db3b1f325c0f25bba6d5e9b60
   languageName: node
   linkType: hard
 

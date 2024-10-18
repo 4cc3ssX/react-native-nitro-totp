@@ -33,9 +33,12 @@ namespace margelo::nitro::totp {
   /**
    * An abstract base class for `NitroHOTP`
    * Inherit this class to create instances of `HybridNitroHOTPSpec` in C++.
+   * You must explicitly call `HybridObject`'s constructor yourself, because it is virtual.
    * @example
    * ```cpp
    * class HybridNitroHOTP: public HybridNitroHOTPSpec {
+   * public:
+   *   HybridNitroHOTP(...): HybridObject(TAG) { ... }
    *   // ...
    * };
    * ```

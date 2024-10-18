@@ -27,9 +27,12 @@ namespace margelo::nitro::totp {
   /**
    * An abstract base class for `NitroSecret`
    * Inherit this class to create instances of `HybridNitroSecretSpec` in C++.
+   * You must explicitly call `HybridObject`'s constructor yourself, because it is virtual.
    * @example
    * ```cpp
    * class HybridNitroSecret: public HybridNitroSecretSpec {
+   * public:
+   *   HybridNitroSecret(...): HybridObject(TAG) { ... }
    *   // ...
    * };
    * ```

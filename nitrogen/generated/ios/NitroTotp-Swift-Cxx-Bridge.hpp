@@ -7,45 +7,20 @@
 
 #pragma once
 
+#if __has_include(<NitroModules/NitroDefines.hpp>)
+#include <NitroModules/NitroDefines.hpp>
+#else
+#error NitroModules cannot be found! Are you sure you installed NitroModules properly?
+#endif
+
 // Forward declarations of C++ defined types
-// Forward declaration of `GenerateSecretKeyOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct GenerateSecretKeyOptions; }
-// Forward declaration of `NitroHOTPGenerateOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct NitroHOTPGenerateOptions; }
-// Forward declaration of `NitroHOTPValidateOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct NitroHOTPValidateOptions; }
-// Forward declaration of `NitroTotpGenerateOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct NitroTotpGenerateOptions; }
-// Forward declaration of `NitroTotpValidateOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct NitroTotpValidateOptions; }
-// Forward declaration of `SupportedAlgorithm` to properly resolve imports.
-namespace margelo::nitro::totp { enum class SupportedAlgorithm; }
+
+
+// Forward declarations of Swift defined types
+
 
 // Include C++ defined types
-#if __has_include("GenerateSecretKeyOptions.hpp")
- #include "GenerateSecretKeyOptions.hpp"
-#endif
-#if __has_include("NitroHOTPGenerateOptions.hpp")
- #include "NitroHOTPGenerateOptions.hpp"
-#endif
-#if __has_include("NitroHOTPValidateOptions.hpp")
- #include "NitroHOTPValidateOptions.hpp"
-#endif
-#if __has_include("NitroTotpGenerateOptions.hpp")
- #include "NitroTotpGenerateOptions.hpp"
-#endif
-#if __has_include("NitroTotpValidateOptions.hpp")
- #include "NitroTotpValidateOptions.hpp"
-#endif
-#if __has_include("SupportedAlgorithm.hpp")
- #include "SupportedAlgorithm.hpp"
-#endif
-#if __has_include(<optional>)
- #include <optional>
-#endif
-#if __has_include(<string>)
- #include <string>
-#endif
+
 
 /**
  * Contains specialized versions of C++ templated types so they can be accessed from Swift,
@@ -53,76 +28,6 @@ namespace margelo::nitro::totp { enum class SupportedAlgorithm; }
  */
 namespace margelo::nitro::totp::bridge::swift {
 
-  /**
-   * Specialized version of `std::optional<double>`.
-   */
-  using std__optional_double_ = std::optional<double>;
-  inline std::optional<double> create_std__optional_double_(const double& value) {
-    return std::optional<double>(value);
-  }
   
-  /**
-   * Specialized version of `std::optional<SupportedAlgorithm>`.
-   */
-  using std__optional_SupportedAlgorithm_ = std::optional<SupportedAlgorithm>;
-  inline std::optional<SupportedAlgorithm> create_std__optional_SupportedAlgorithm_(const SupportedAlgorithm& value) {
-    return std::optional<SupportedAlgorithm>(value);
-  }
-  
-  /**
-   * Specialized version of `std::optional<NitroHOTPGenerateOptions>`.
-   */
-  using std__optional_NitroHOTPGenerateOptions_ = std::optional<NitroHOTPGenerateOptions>;
-  inline std::optional<NitroHOTPGenerateOptions> create_std__optional_NitroHOTPGenerateOptions_(const NitroHOTPGenerateOptions& value) {
-    return std::optional<NitroHOTPGenerateOptions>(value);
-  }
-  
-  /**
-   * Specialized version of `std::optional<NitroHOTPValidateOptions>`.
-   */
-  using std__optional_NitroHOTPValidateOptions_ = std::optional<NitroHOTPValidateOptions>;
-  inline std::optional<NitroHOTPValidateOptions> create_std__optional_NitroHOTPValidateOptions_(const NitroHOTPValidateOptions& value) {
-    return std::optional<NitroHOTPValidateOptions>(value);
-  }
-  
-  /**
-   * Specialized version of `std::optional<std::string>`.
-   */
-  using std__optional_std__string_ = std::optional<std::string>;
-  inline std::optional<std::string> create_std__optional_std__string_(const std::string& value) {
-    return std::optional<std::string>(value);
-  }
-  
-  /**
-   * Specialized version of `std::optional<bool>`.
-   */
-  using std__optional_bool_ = std::optional<bool>;
-  inline std::optional<bool> create_std__optional_bool_(const bool& value) {
-    return std::optional<bool>(value);
-  }
-  
-  /**
-   * Specialized version of `std::optional<GenerateSecretKeyOptions>`.
-   */
-  using std__optional_GenerateSecretKeyOptions_ = std::optional<GenerateSecretKeyOptions>;
-  inline std::optional<GenerateSecretKeyOptions> create_std__optional_GenerateSecretKeyOptions_(const GenerateSecretKeyOptions& value) {
-    return std::optional<GenerateSecretKeyOptions>(value);
-  }
-  
-  /**
-   * Specialized version of `std::optional<NitroTotpGenerateOptions>`.
-   */
-  using std__optional_NitroTotpGenerateOptions_ = std::optional<NitroTotpGenerateOptions>;
-  inline std::optional<NitroTotpGenerateOptions> create_std__optional_NitroTotpGenerateOptions_(const NitroTotpGenerateOptions& value) {
-    return std::optional<NitroTotpGenerateOptions>(value);
-  }
-  
-  /**
-   * Specialized version of `std::optional<NitroTotpValidateOptions>`.
-   */
-  using std__optional_NitroTotpValidateOptions_ = std::optional<NitroTotpValidateOptions>;
-  inline std::optional<NitroTotpValidateOptions> create_std__optional_NitroTotpValidateOptions_(const NitroTotpValidateOptions& value) {
-    return std::optional<NitroTotpValidateOptions>(value);
-  }
 
 } // namespace margelo::nitro::totp::bridge::swift

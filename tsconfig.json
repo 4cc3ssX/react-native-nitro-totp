@@ -6,7 +6,7 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "lib",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "react-native-nitro-totp": ["./src/index"]
     },
@@ -17,7 +17,7 @@
     "jsx": "react",
     "lib": ["esnext"],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "noEmit": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
