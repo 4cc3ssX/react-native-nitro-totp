@@ -1,4 +1,15 @@
+# Changelog
 
+## [1.2.0](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.1.1...v1.2.0) (2025-04-20)
+
+### 🚀 Features
+
+* react native version upgrade to v0.79.1 ([66ed2bb](https://github.com/4cc3ssX/react-native-nitro-totp/commit/66ed2bb284ea2f75f6318451c651bc41daf5c4b2))
+
+### 🧹 Chore
+
+* minor changes ([9b555d9](https://github.com/4cc3ssX/react-native-nitro-totp/commit/9b555d989ee57fbc4885f84445291e50390ed395))
+* upgrade nitro modules version ([2e53408](https://github.com/4cc3ssX/react-native-nitro-totp/commit/2e5340844288b6401ce0bcf34d0b5da73eddc875))
 
 ## [1.1.1](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.1.0...v1.1.1) (2024-10-18)
 
