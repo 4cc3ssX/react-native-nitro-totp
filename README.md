@@ -172,4 +172,4 @@ MIT
 
 ---
 
-Made with [react-native-nitro-modules](https://github.com/callstack/react-native-builder-bob)
+Made with [react-native-nitro-modules](https://github.com/mrousavy/nitro)
