@@ -1,15 +1,9 @@
 {
-  "include": [
-    "src",
-    "example"
-  ],
+  "include": ["src"],
   "compilerOptions": {
     "composite": true,
     "outDir": "lib",
-    "baseUrl": ".",
-    "paths": {
-      "react-native-nitro-totp": ["./src/index"]
-    },
+    "rootDir": "src",
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
@@ -17,7 +11,7 @@
     "jsx": "react",
     "lib": ["esnext"],
     "module": "esnext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "node",
     "noEmit": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,

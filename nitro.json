@@ -1,7 +1,8 @@
 {
+  "$schema": "https://nitro.margelo.com/nitro.schema.json",
   "cxxNamespace": ["totp"],
   "ios": {
-    "iosModulename": "NitroTotp"
+    "iosModuleName": "NitroTotp"
   },
   "android": {
     "androidNamespace": ["totp"],
@@ -18,5 +19,7 @@
       "cpp": "HybridNitroHotp"
     }
   },
-  "ignorePaths": ["node_modules"]
+  "ignorePaths": [
+    "**/node_modules"
+  ]
 }
