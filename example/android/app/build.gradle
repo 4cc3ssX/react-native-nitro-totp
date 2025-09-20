@@ -105,25 +105,6 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-
-    packagingOptions {
-        pickFirst    "META-INF"
-        pickFirst    "META-INF/**"
-        pickFirst    "**/libc++_shared.so"
-        pickFirst    "**/libfbjni.so"
-        pickFirst    "**/libjsi.so"
-        pickFirst    "**/libfolly_json.so"
-        pickFirst    "**/libfolly_runtime.so"
-        pickFirst    "**/libglog.so"
-        pickFirst    "**/libhermes.so"
-        pickFirst    "**/libhermes-executor-debug.so"
-        pickFirst    "**/libhermes_executor.so"
-        pickFirst    "**/libreactnativejni.so"
-        pickFirst    "**/libturbomodulejsijni.so"
-        pickFirst    "**/libreact_nativemodule_core.so"
-        pickFirst    "**/libjscexecutor.so"
-        
-    }
 }
 
 dependencies {
