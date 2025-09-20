@@ -1,8 +1,8 @@
 #include "HybridNitroHotp.hpp"
-#include "BaseOptions.hpp"
-#include "Hmac.hpp"
-#include "Secret.hpp"
-#include "Utils.hpp"
+#include "../utils/BaseOptions.hpp"
+#include "../core/Hmac.hpp"
+#include "../core/Secret.hpp"
+#include "../utils/Utils.hpp"
 #include <iomanip>
 #include <random>
 #include <sstream>
@@ -108,67 +108,6 @@ bool HybridNitroHotp::validate(
     }
 
     return false;
-}
-
-std::string HybridNitroHotp::generateAuthURL(const OTPAuthURLOptions &options) {
-    std::ostringstream url;
-    url << "otpauth://hotp/";
-    std::string label = BaseOTPAuthURLOptions::label;
-    std::string issuer = BaseOTPAuthURLOptions::issuer;
-    bool issuerInLabel = BaseOTPAuthURLOptions::issuerInLabel;
-    std::string algorithm =
-        Utils::getAlgorithmName(BaseGenerationOptions::algorithm);
-    int digits = BaseGenerationOptions::digits;
-    int counter = BaseGenerationOptions::counter;
-
-    if (options.secret.empty()) {
-        throw std::runtime_error("Secret is required");
-    }
-
-    std::string secret = options.secret;
-
-    if (options.label.has_value()) {
-        label = options.label.value();
-    }
-
-    if (options.issuer.has_value()) {
-        issuer = options.issuer.value();
-    }
-
-    if (options.issuerInLabel.has_value()) {
-        issuerInLabel = options.issuerInLabel.value();
-    }
-
-    if (options.counter.has_value()) {
-        counter = static_cast<int>(options.counter.value());
-    }
-    if (options.digits.has_value()) {
-        digits = static_cast<int>(options.digits.value());
-    }
-    if (options.algorithm.has_value()) {
-        algorithm = Utils::getAlgorithmName(options.algorithm.value());
-    }
-
-    if (!issuer.empty()) {
-        if (issuerInLabel) {
-            url << Utils::encodeURIComponent(issuer) << ":"
-                << Utils::encodeURIComponent(label)
-                << "?issuer=" << Utils::encodeURIComponent(issuer) << "&";
-        } else {
-            url << Utils::encodeURIComponent(label)
-                << "?issuer=" << Utils::encodeURIComponent(issuer) << "&";
-        }
-    } else {
-        url << Utils::encodeURIComponent(label) << "?";
-    }
-
-    // Add secret, algorithm, digits, and counter
-    url << "secret=" << Utils::encodeURIComponent(secret) << "&";
-    url << "algorithm=" << Utils::encodeURIComponent(algorithm) << "&";
-    url << "digits=" << digits << "&";
-    url << "counter=" << counter;
-
-    return url.str();
 }
 
 } // namespace margelo::nitro::totp

@@ -19,7 +19,5 @@
       "cpp": "HybridNitroHotp"
     }
   },
-  "ignorePaths": [
-    "**/node_modules"
-  ]
+  "ignorePaths": ["node_modules"]
 }

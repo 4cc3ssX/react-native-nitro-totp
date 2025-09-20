@@ -16,7 +16,6 @@ namespace margelo::nitro::totp {
     registerHybrids(this, [](Prototype& prototype) {
       prototype.registerHybridMethod("generate", &HybridNitroTotpSpec::generate);
       prototype.registerHybridMethod("validate", &HybridNitroTotpSpec::validate);
-      prototype.registerHybridMethod("generateAuthURL", &HybridNitroTotpSpec::generateAuthURL);
     });
   }
 

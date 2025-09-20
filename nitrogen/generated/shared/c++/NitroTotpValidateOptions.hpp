@@ -45,26 +45,24 @@ namespace margelo::nitro::totp {
 
 namespace margelo::nitro {
 
-  using namespace margelo::nitro::totp;
-
   // C++ NitroTotpValidateOptions <> JS NitroTotpValidateOptions (object)
   template <>
-  struct JSIConverter<NitroTotpValidateOptions> final {
-    static inline NitroTotpValidateOptions fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::totp::NitroTotpValidateOptions> final {
+    static inline margelo::nitro::totp::NitroTotpValidateOptions fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return NitroTotpValidateOptions(
+      return margelo::nitro::totp::NitroTotpValidateOptions(
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "period")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "window")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "digits")),
-        JSIConverter<std::optional<SupportedAlgorithm>>::fromJSI(runtime, obj.getProperty(runtime, "algorithm"))
+        JSIConverter<std::optional<margelo::nitro::totp::SupportedAlgorithm>>::fromJSI(runtime, obj.getProperty(runtime, "algorithm"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const NitroTotpValidateOptions& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::totp::NitroTotpValidateOptions& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "period", JSIConverter<std::optional<double>>::toJSI(runtime, arg.period));
       obj.setProperty(runtime, "window", JSIConverter<std::optional<double>>::toJSI(runtime, arg.window));
       obj.setProperty(runtime, "digits", JSIConverter<std::optional<double>>::toJSI(runtime, arg.digits));
-      obj.setProperty(runtime, "algorithm", JSIConverter<std::optional<SupportedAlgorithm>>::toJSI(runtime, arg.algorithm));
+      obj.setProperty(runtime, "algorithm", JSIConverter<std::optional<margelo::nitro::totp::SupportedAlgorithm>>::toJSI(runtime, arg.algorithm));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -75,7 +73,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "period"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "window"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "digits"))) return false;
-      if (!JSIConverter<std::optional<SupportedAlgorithm>>::canConvert(runtime, obj.getProperty(runtime, "algorithm"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::totp::SupportedAlgorithm>>::canConvert(runtime, obj.getProperty(runtime, "algorithm"))) return false;
       return true;
     }
   };

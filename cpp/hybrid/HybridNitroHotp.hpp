@@ -19,9 +19,6 @@ class HybridNitroHotp : public HybridNitroHOTPSpec {
     bool validate(const std::string &secret, const std::string &otp,
                   const std::optional<NitroHOTPValidateOptions> &options) override;
 
-    // Generates an OTP Auth URL
-    std::string generateAuthURL(const OTPAuthURLOptions &options) override;
-
     void loadHybridMethods() override {
         // call base protoype
         HybridNitroHOTPSpec::loadHybridMethods();

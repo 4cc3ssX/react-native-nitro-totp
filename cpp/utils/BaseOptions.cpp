@@ -2,11 +2,6 @@
 
 namespace margelo::nitro::totp {
 
-// Initialize static members of BaseOTPAuthURLOptions
-std::string BaseOTPAuthURLOptions::issuer = "";
-std::string BaseOTPAuthURLOptions::label = "OTPAuth";
-bool BaseOTPAuthURLOptions::issuerInLabel = false;
-
 // Initialize static members of BaseSecretKeyOptions
 int BaseSecretKeyOptions::length = 12;
 

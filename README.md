@@ -3,12 +3,12 @@
 ## Installation
 ```
 # npm
-npm install react-native-nitro-totp
+npm install react-native-nitro-totp react-native-nitro-modules
 
 # yarn
-yarn add react-native-nitro-totp
+yarn add react-native-nitro-totp react-native-nitro-modules
 ```
-Extra installation steps for [Nitro Modules](https://mrousavy.github.io/nitro/) can be found [here](https://mrousavy.github.io/nitro/docs/for-users)
+> `react-native-nitro-modules` is required as this library relies on [Nitro Modules](https://nitro.margelo.com/).
 
 ## Usage
 ```ts
@@ -164,7 +164,9 @@ export interface OTPAuthURLOptions extends BaseGenerateOptions {
 
 ## Contributing
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+- [Development workflow](CONTRIBUTING.md#development-workflow)
+- [Sending a pull request](CONTRIBUTING.md#sending-a-pull-request)
+- [Code of conduct](CODE_OF_CONDUCT.md)
 
 ## License
 
@@ -172,4 +174,4 @@ MIT
 
 ---
 
-Made with [react-native-nitro-modules](https://github.com/mrousavy/nitro)
+Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)

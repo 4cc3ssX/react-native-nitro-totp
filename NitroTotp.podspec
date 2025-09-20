@@ -11,17 +11,17 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => min_ios_version_supported }
-  s.source       = { :git => "https://github.com/mrousavy/nitro.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/4cc3ssX/react-native-nitro-totp.git", :tag => "#{s.version}" }
+
 
   s.source_files = [
-    # Implementation (Swift)
     "ios/**/*.{swift}",
-    # Autolinking/Registration (Objective-C++)
     "ios/**/*.{m,mm}",
-    # Implementation (C++ objects)
     "cpp/**/*.{hpp,cpp}",
   ]
 
+  s.dependency 'React-jsi'
+  s.dependency 'React-callinvoker'
   s.dependency 'OpenSSL-Universal'
 
   load 'nitrogen/generated/ios/NitroTotp+autolinking.rb'
