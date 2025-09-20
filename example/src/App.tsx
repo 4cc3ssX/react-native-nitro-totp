@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   ScrollView,
   Alert,
+  Button,
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   formatOTP,
@@ -19,10 +20,19 @@ import {
   NitroHotp,
   parseSecretKey,
   SupportedAlgorithm,
+  NitroSecret,
 } from 'react-native-nitro-totp';
 
-export default function App() {
-  const [secretKey, setSecretKey] = useState<string>('');
+const DEFAULT_SECRET_KEY = 'JBSWY3DPEHPK3PXP';
+
+const nitroTotp = new NitroTotp();
+const nitroHotp = new NitroHotp();
+const nitroSecret = new NitroSecret();
+
+function NitroTotpExample() {
+  const [secretKey, setSecretKey] = useState<string>(
+    formatSecretKey(DEFAULT_SECRET_KEY)
+  );
   const [totpCode, setTotpCode] = useState<string>('');
   const [hotpCode, setHotpCode] = useState<string>('');
   const [hotpCounter, setHotpCounter] = useState<number>(0);
@@ -34,85 +44,70 @@ export default function App() {
   const [totpAuthURL, setTotpAuthURL] = useState<string>('');
   const [hotpAuthURL, setHotpAuthURL] = useState<string>('');
 
-  const nitroTotp = new NitroTotp();
-  const nitroHotp = new NitroHotp();
-
-  const updateTimer = useCallback(() => {
-    const now = Date.now();
-    const timeLeft = 30 - Math.floor((now / 1000) % 30);
-    setTimeRemaining(timeLeft);
-
-    if (timeLeft === 30 && secretKey) {
-      generateTOTP();
-    }
-  }, [secretKey]);
-
-  useEffect(() => {
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
-  }, [updateTimer]);
-
   const generateSecretKey = () => {
-    const secret = nitroTotp.secret.generate();
+    const secret = nitroSecret.generate();
     const formattedSecret = formatSecretKey(secret);
     setSecretKey(formattedSecret);
     generateTOTP();
     generateAuthURLs(secret);
   };
 
-  const generateTOTP = () => {
+  const generateTOTP = useCallback(() => {
     if (!secretKey) return;
 
     const secret = parseSecretKey(secretKey);
     const code = nitroTotp.generate(secret);
     setTotpCode(formatOTP(code));
-  };
+  }, [secretKey]);
 
-  const generateHOTP = () => {
+  const generateHOTP = useCallback(() => {
     if (!secretKey) return;
 
     const secret = parseSecretKey(secretKey);
     const code = nitroHotp.generate(secret, { counter: hotpCounter });
     setHotpCode(formatOTP(code));
     setHotpCounter((prev) => prev + 1);
-  };
+  }, [hotpCounter, secretKey]);
 
-  const generateAuthURLs = (secret?: string) => {
-    const secretToUse = secret || parseSecretKey(secretKey);
-    if (!secretToUse) return;
+  const generateAuthURLs = useCallback(
+    (secret?: string) => {
+      const secretToUse = secret || parseSecretKey(secretKey);
+      if (!secretToUse) return;
 
-    const totpUrl = nitroTotp.generateAuthURL({
-      secret: secretToUse,
-      issuer: 'NitroTotp Demo',
-      label: 'Demo Account',
-      algorithm: SupportedAlgorithm.SHA1,
-      digits: 6,
-      period: 30,
-    });
+      const totpUrl = nitroTotp.generateAuthURL({
+        secret: secretToUse,
+        issuer: 'NitroTotp Example',
+        label: 'Example Account',
+        algorithm: SupportedAlgorithm.SHA1,
+        digits: 6,
+        period: 30,
+      });
 
-    const hotpUrl = nitroHotp.generateAuthURL({
-      secret: secretToUse,
-      issuer: 'NitroHotp Demo',
-      label: 'Demo Account',
-      algorithm: SupportedAlgorithm.SHA1,
-      digits: 6,
-      counter: 0,
-    });
+      const hotpUrl = nitroHotp.generateAuthURL({
+        secret: secretToUse,
+        issuer: 'NitroHotp Example',
+        label: 'Example Account',
+        algorithm: SupportedAlgorithm.SHA1,
+        digits: 6,
+        counter: 0,
+      });
 
-    setTotpAuthURL(totpUrl);
-    setHotpAuthURL(hotpUrl);
-  };
+      setTotpAuthURL(totpUrl);
+      setHotpAuthURL(hotpUrl);
+    },
+    [secretKey]
+  );
 
-  const validateOTP = () => {
+  const validateOTP = useCallback(() => {
     if (!secretKey || !testOtp) return;
 
     const secret = parseSecretKey(secretKey);
     const isValid = nitroTotp.validate(secret, testOtp);
     setValidationResult(isValid);
-  };
+  }, [secretKey, testOtp]);
 
   const copyToClipboard = (text: string, type: string) => {
-    Clipboard.setString(text);
+    Clipboard.setString(text.trim());
     Alert.alert('Copied!', `${type} copied to clipboard`);
   };
 
@@ -124,21 +119,34 @@ export default function App() {
   };
 
   useEffect(() => {
-    const defaultSecret = 'JBSWY3DPEHPK3PXP';
-    setSecretKey(formatSecretKey(defaultSecret));
-    generateAuthURLs(defaultSecret);
+    generateAuthURLs(DEFAULT_SECRET_KEY);
 
-    const secret = parseSecretKey(formatSecretKey(defaultSecret));
+    const secret = parseSecretKey(formatSecretKey(DEFAULT_SECRET_KEY));
     const code = nitroTotp.generate(secret);
     setTotpCode(formatOTP(code));
-  }, []);
+  }, [generateAuthURLs]);
+
+  const updateTimer = useCallback(() => {
+    const now = Date.now();
+    const timeLeft = 30 - Math.floor((now / 1000) % 30);
+    setTimeRemaining(timeLeft);
+
+    if (timeLeft === 30 && secretKey) {
+      generateTOTP();
+    }
+  }, [secretKey, generateTOTP]);
+
+  useEffect(() => {
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [updateTimer]);
 
   const progressPercentage = ((30 - timeRemaining) / 30) * 100;
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>🔐 NitroTotp Demo</Text>
+        <Text style={styles.title}>🔐 NitroTotp Example</Text>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Secret Key</Text>
@@ -149,9 +157,7 @@ export default function App() {
             onChangeText={onSecretKeyChange}
             multiline
           />
-          <TouchableOpacity style={styles.button} onPress={generateSecretKey}>
-            <Text style={styles.buttonText}>Generate Random Secret</Text>
-          </TouchableOpacity>
+          <Button title="Generate Random Secret" onPress={generateSecretKey} />
         </View>
 
         <View style={styles.section}>
@@ -168,12 +174,10 @@ export default function App() {
               />
             </View>
           </View>
-          <TouchableOpacity
-            style={[styles.button, styles.secondaryButton]}
+          <Button
+            title="Copy TOTP Code"
             onPress={() => copyToClipboard(totpCode, 'TOTP Code')}
-          >
-            <Text style={styles.buttonText}>Copy TOTP Code</Text>
-          </TouchableOpacity>
+          />
         </View>
 
         <View style={styles.section}>
@@ -182,30 +186,27 @@ export default function App() {
             <Text style={styles.otpCode}>{hotpCode || '------'}</Text>
             <Text style={styles.timer}>Counter: {hotpCounter}</Text>
           </View>
-          <TouchableOpacity style={styles.button} onPress={generateHOTP}>
-            <Text style={styles.buttonText}>Generate HOTP</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.secondaryButton]}
-            onPress={() => copyToClipboard(hotpCode, 'HOTP Code')}
-          >
-            <Text style={styles.buttonText}>Copy HOTP Code</Text>
-          </TouchableOpacity>
+          <Button title="Generate HOTP" onPress={generateHOTP} />
+          <View style={{ marginTop: 10 }}>
+            <Button
+              title="Copy HOTP Code"
+              onPress={() => copyToClipboard(hotpCode, 'HOTP Code')}
+            />
+          </View>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Validate OTP</Text>
           <TextInput
+            textContentType="oneTimeCode"
             style={styles.input}
             placeholder="Enter OTP to validate"
             value={testOtp}
             onChangeText={setTestOtp}
             keyboardType="numeric"
-            maxLength={6}
+            maxLength={7}
           />
-          <TouchableOpacity style={styles.button} onPress={validateOTP}>
-            <Text style={styles.buttonText}>Validate</Text>
-          </TouchableOpacity>
+          <Button title="Validate" onPress={validateOTP} />
           {validationResult !== null && (
             <Text
               style={[
@@ -221,25 +222,29 @@ export default function App() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Auth URLs</Text>
           <Text style={styles.urlLabel}>TOTP URL:</Text>
-          <TouchableOpacity
-            onPress={() => copyToClipboard(totpAuthURL, 'TOTP URL')}
-          >
+          <Pressable onPress={() => copyToClipboard(totpAuthURL, 'TOTP URL')}>
             <Text style={styles.urlText} numberOfLines={3}>
               {totpAuthURL}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
 
           <Text style={styles.urlLabel}>HOTP URL:</Text>
-          <TouchableOpacity
-            onPress={() => copyToClipboard(hotpAuthURL, 'HOTP URL')}
-          >
+          <Pressable onPress={() => copyToClipboard(hotpAuthURL, 'HOTP URL')}>
             <Text style={styles.urlText} numberOfLines={3}>
               {hotpAuthURL}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <NitroTotpExample />
+    </SafeAreaProvider>
   );
 }
 
@@ -284,21 +289,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: '#fafafa',
   },
-  button: {
-    backgroundColor: '#2196F3',
-    borderRadius: 8,
-    padding: 15,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  secondaryButton: {
-    backgroundColor: '#757575',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+
   otpContainer: {
     alignItems: 'center',
     marginBottom: 20,
