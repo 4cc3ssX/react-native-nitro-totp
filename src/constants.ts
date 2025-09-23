@@ -1,13 +1,13 @@
 import { SupportedAlgorithm } from './types';
 
-export enum NitroTotpConstants {
-  DEFAULT_DIGITS = 6,
-  DEFAULT_PERIOD = 30,
-  DEFAULT_SECRET_SIZE = 12,
-  DEFAULT_WINDOW = 1,
-  DEFAULT_COUNTER = 0,
-  DEFAULT_ALGORITHM = SupportedAlgorithm.SHA1,
-}
+export const NitroTotpConstants = {
+  DEFAULT_DIGITS: 6,
+  DEFAULT_PERIOD: 30,
+  DEFAULT_SECRET_SIZE: 12,
+  DEFAULT_WINDOW: 1,
+  DEFAULT_COUNTER: 0,
+  DEFAULT_ALGORITHM: SupportedAlgorithm.SHA1,
+};
 
 export const defaultOptions = {
   issuer: '',

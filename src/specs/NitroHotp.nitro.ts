@@ -6,10 +6,10 @@ import type {
 
 export interface NitroHOTP
   extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
-  generate(secret: string, options?: NitroHOTPGenerateOptions): string;
+  generate(secret: string, options: NitroHOTPGenerateOptions): string;
   validate(
     secret: string,
     otp: string,
-    options?: NitroHOTPValidateOptions
+    options: NitroHOTPValidateOptions
   ): boolean;
 }

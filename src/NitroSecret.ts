@@ -20,7 +20,11 @@ export class NitroSecret {
    * @param options - Optional parameters for secret generation.
    * @returns The generated secret as a Base32-encoded string.
    */
-  generate(options?: GenerateSecretKeyOptions): string {
+  generate(options: GenerateSecretKeyOptions = {}): string {
+    if (!options.length) {
+      options.length = NitroTotpConstants.DEFAULT_SECRET_SIZE;
+    }
+
     return this.nitroSecret.generate(options);
   }
 

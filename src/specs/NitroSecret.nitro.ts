@@ -3,5 +3,5 @@ import type { GenerateSecretKeyOptions } from '../types';
 
 export interface NitroSecret
   extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
-  generate(options?: GenerateSecretKeyOptions): string;
+  generate(options: GenerateSecretKeyOptions): string;
 }

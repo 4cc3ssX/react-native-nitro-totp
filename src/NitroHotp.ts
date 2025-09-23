@@ -26,7 +26,19 @@ export class NitroHotp {
    * @param options - Optional parameters for HOTP generation.
    * @returns The generated HOTP code as a string.
    */
-  generate(secret: string, options?: NitroHOTPGenerateOptions): string {
+  generate(secret: string, options: NitroHOTPGenerateOptions = {}): string {
+    if (!options.digits) {
+      options.digits = NitroTotpConstants.DEFAULT_DIGITS;
+    }
+
+    if (!options.algorithm) {
+      options.algorithm = NitroTotpConstants.DEFAULT_ALGORITHM;
+    }
+
+    if (!options.counter) {
+      options.counter = NitroTotpConstants.DEFAULT_COUNTER;
+    }
+
     return this.nitroHOTP.generate(secret, options);
   }
 
@@ -41,8 +53,20 @@ export class NitroHotp {
   validate(
     secret: string,
     otp: string,
-    options?: NitroHOTPValidateOptions
+    options: NitroHOTPValidateOptions = {}
   ): boolean {
+    if (!options.digits) {
+      options.digits = NitroTotpConstants.DEFAULT_DIGITS;
+    }
+
+    if (!options.algorithm) {
+      options.algorithm = NitroTotpConstants.DEFAULT_ALGORITHM;
+    }
+
+    if (!options.counter) {
+      options.counter = NitroTotpConstants.DEFAULT_COUNTER;
+    }
+
     return this.nitroHOTP.validate(secret, otp, options);
   }
 
@@ -76,19 +100,6 @@ export class NitroHotp {
   }
 
   /**
-   * Encodes a string for use in a URI component.
-   *
-   * @param str - The string to encode.
-   * @returns The URI-encoded string.
-   */
-  private encodeURIComponent(str: string): string {
-    return encodeURIComponent(str).replace(
-      /[!'()*]/g,
-      (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`
-    );
-  }
-
-  /**
    * Generates an OTP Auth URL for HOTP.
    *
    * @param options - The options for generating the auth URL.
@@ -113,16 +124,16 @@ export class NitroHotp {
 
     if (issuer) {
       if (issuerInLabel) {
-        url += `${this.encodeURIComponent(issuer)}:${this.encodeURIComponent(label)}?issuer=${this.encodeURIComponent(issuer)}&`;
+        url += `${encodeURIComponent(issuer)}:${encodeURIComponent(label)}?issuer=${encodeURIComponent(issuer)}&`;
       } else {
-        url += `${this.encodeURIComponent(label)}?issuer=${this.encodeURIComponent(issuer)}&`;
+        url += `${encodeURIComponent(label)}?issuer=${encodeURIComponent(issuer)}&`;
       }
     } else {
-      url += `${this.encodeURIComponent(label)}?`;
+      url += `${encodeURIComponent(label)}?`;
     }
 
-    url += `secret=${this.encodeURIComponent(secret)}&`;
-    url += `algorithm=${this.encodeURIComponent(this.getAlgorithmName(algorithm))}&`;
+    url += `secret=${encodeURIComponent(secret)}&`;
+    url += `algorithm=${encodeURIComponent(this.getAlgorithmName(algorithm))}&`;
     url += `digits=${digits}&`;
     url += `counter=${counter}`;
 
