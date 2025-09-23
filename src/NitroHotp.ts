@@ -35,7 +35,7 @@ export class NitroHotp {
       options.algorithm = NitroTotpConstants.DEFAULT_ALGORITHM;
     }
 
-    if (!options.counter) {
+    if (options.counter === undefined || options.counter === null) {
       options.counter = NitroTotpConstants.DEFAULT_COUNTER;
     }
 
