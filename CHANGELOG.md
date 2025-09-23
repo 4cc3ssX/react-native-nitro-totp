@@ -1,5 +1,45 @@
 # Changelog
 
+## [v1.4.0](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.3.0...v1.4.0) (2025-09-23)
+
+### 🚀 Features
+- support `currentTime` option for TOTP generate and validate methods ([02dbcc2](https://github.com/4cc3ssX/react-native-nitro-totp/commit/02dbcc2))
+
+### 🐛 Bug Fixes
+- window is not working as `HybridNitroHotp::validate` used `counter` variable instead of `testCounter` while generating options ([da515c8](https://github.com/4cc3ssX/react-native-nitro-totp/pull/8/files#diff-a39bb2b98aff54a6825bf91ad472a1cd5507c65dc7b546d6308ef541eabe64d4R62))
+
+### 📦 Refactor
+- make nitro spec options non-optional arg ([da515c8](https://github.com/4cc3ssX/react-native-nitro-totp/commit/da515c8))
+
+### 📚 Documentation
+- update README for `currentTime` support ([cdaa2ae](https://github.com/4cc3ssX/react-native-nitro-totp/commit/cdaa2ae))
+
+### 💄 Styles
+- reindent files ([72886d5](https://github.com/4cc3ssX/react-native-nitro-totp/commit/72886d5))
+
+### 🧹 Chore
+- update example project with example ([6c0d93d](https://github.com/4cc3ssX/react-native-nitro-totp/commit/6c0d93d))
+
+
+## [v1.3.0](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.2.0...v1.3.0) (2025-09-23)
+
+### 🚀 Features
+- Expo SDK 54 support + refactoring by @4cc3ssX in #7
+
+### 🐛 Bug Fixes
+- android build issue ([18ea913](https://github.com/4cc3ssX/react-native-nitro-totp/commit/18ea913))
+- example component ([9ce8eb5](https://github.com/4cc3ssX/react-native-nitro-totp/commit/9ce8eb5))
+- minor changes ([7953a9a](https://github.com/4cc3ssX/react-native-nitro-totp/commit/7953a9a))
+
+### 📦 Refactor
+- use builder bob template + refactoring ([cbe3ccf](https://github.com/4cc3ssX/react-native-nitro-totp/commit/cbe3ccf))
+
+### 📚 Documentation
+- update README with enhanced features and usage examples ([f183e15](https://github.com/4cc3ssX/react-native-nitro-totp/commit/f183e15))
+
+### 🧹 Chore
+- update example project ([fd95889](https://github.com/4cc3ssX/react-native-nitro-totp/commit/fd95889))
+
 ## [1.2.0](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.1.1...v1.2.0) (2025-04-20)
 
 ### 🚀 Features
