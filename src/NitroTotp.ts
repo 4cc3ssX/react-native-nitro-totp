@@ -26,7 +26,23 @@ export class NitroTotp {
    * @param options - Optional parameters for TOTP generation.
    * @returns The generated TOTP code as a string.
    */
-  generate(secret: string, options?: NitroTotpGenerateOptions): string {
+  generate(secret: string, options: NitroTotpGenerateOptions = {}): string {
+    if (!options.digits) {
+      options.digits = NitroTotpConstants.DEFAULT_DIGITS;
+    }
+
+    if (!options.period) {
+      options.period = NitroTotpConstants.DEFAULT_PERIOD;
+    }
+
+    if (!options.algorithm) {
+      options.algorithm = NitroTotpConstants.DEFAULT_ALGORITHM;
+    }
+
+    if (!options.currentTime) {
+      options.currentTime = Math.floor(Date.now() / 1000);
+    }
+
     return this.nitroTotp.generate(secret, options);
   }
 
@@ -41,8 +57,28 @@ export class NitroTotp {
   validate(
     secret: string,
     otp: string,
-    options?: NitroTotpValidateOptions
+    options: NitroTotpValidateOptions = {}
   ): boolean {
+    if (!options.digits) {
+      options.digits = NitroTotpConstants.DEFAULT_DIGITS;
+    }
+
+    if (!options.period) {
+      options.period = NitroTotpConstants.DEFAULT_PERIOD;
+    }
+
+    if (!options.algorithm) {
+      options.algorithm = NitroTotpConstants.DEFAULT_ALGORITHM;
+    }
+
+    if (options.window === undefined || options.window === null) {
+      options.window = NitroTotpConstants.DEFAULT_WINDOW;
+    }
+
+    if (!options.currentTime) {
+      options.currentTime = Math.floor(Date.now() / 1000);
+    }
+
     return this.nitroTotp.validate(secret, otp, options);
   }
 
@@ -76,19 +112,6 @@ export class NitroTotp {
   }
 
   /**
-   * Encodes a string for use in a URI component.
-   *
-   * @param str - The string to encode.
-   * @returns The URI-encoded string.
-   */
-  private encodeURIComponent(str: string): string {
-    return encodeURIComponent(str).replace(
-      /[!'()*]/g,
-      (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`
-    );
-  }
-
-  /**
    * Generates an OTP Auth URL for TOTP.
    *
    * @param options - The options for generating the auth URL.
@@ -113,16 +136,16 @@ export class NitroTotp {
 
     if (issuer) {
       if (issuerInLabel) {
-        url += `${this.encodeURIComponent(issuer)}:${this.encodeURIComponent(label)}?issuer=${this.encodeURIComponent(issuer)}&`;
+        url += `${encodeURIComponent(issuer)}:${encodeURIComponent(label)}?issuer=${encodeURIComponent(issuer)}&`;
       } else {
-        url += `${this.encodeURIComponent(label)}?issuer=${this.encodeURIComponent(issuer)}&`;
+        url += `${encodeURIComponent(label)}?issuer=${encodeURIComponent(issuer)}&`;
       }
     } else {
-      url += `${this.encodeURIComponent(label)}?`;
+      url += `${encodeURIComponent(label)}?`;
     }
 
-    url += `secret=${this.encodeURIComponent(secret)}&`;
-    url += `algorithm=${this.encodeURIComponent(this.getAlgorithmName(algorithm))}&`;
+    url += `secret=${encodeURIComponent(secret)}&`;
+    url += `algorithm=${encodeURIComponent(this.getAlgorithmName(algorithm))}&`;
     url += `digits=${digits}&`;
     url += `period=${period}`;
 

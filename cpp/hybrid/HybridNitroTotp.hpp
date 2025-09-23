@@ -6,22 +6,21 @@
 namespace margelo::nitro::totp {
 
 class HybridNitroTotp : public HybridNitroTotpSpec {
-  public:
-    HybridNitroTotp() : HybridObject(TAG) {}
+public:
+  HybridNitroTotp() : HybridObject(TAG) {}
 
-  public:
-    // Generates an OTP based on the secret key and options
-    std::string
-    generate(const std::string &secret,
-             const std::optional<NitroTotpGenerateOptions> &options) override;
+public:
+  // Generates an OTP based on the secret key and options
+  std::string generate(const std::string &secret,
+                       const NitroTotpGenerateOptions &options) override;
 
-    // Validates the OTP based on the secret key and options
-    bool validate(const std::string &secret, const std::string &otp,
-                  const std::optional<NitroTotpValidateOptions> &options) override;
+  // Validates the OTP based on the secret key and options
+  bool validate(const std::string &secret, const std::string &otp,
+                const NitroTotpValidateOptions &options) override;
 
-    void loadHybridMethods() override {
-        // call base protoype
-        HybridNitroTotpSpec::loadHybridMethods();
-    }
+  void loadHybridMethods() override {
+    // call base protoype
+    HybridNitroTotpSpec::loadHybridMethods();
+  }
 };
 } // namespace margelo::nitro::totp

@@ -1,105 +1,54 @@
 #include "HybridNitroTotp.hpp"
-#include "../utils/BaseOptions.hpp"
 #include "../core/Hmac.hpp"
-#include "HybridNitroHotp.hpp"
 #include "../core/Secret.hpp"
+#include "../utils/BaseOptions.hpp"
 #include "../utils/Utils.hpp"
-#include <chrono>
-#include <iomanip>
-#include <random>
-#include <sstream>
+#include "HybridNitroHotp.hpp"
 #include <stdexcept>
 
 namespace margelo::nitro::totp {
 
 // Generates an OTP
-std::string HybridNitroTotp::generate(
-    const std::string &secret,
-    const std::optional<NitroTotpGenerateOptions> &options) {
-    // Set default values
-    int period = BaseGenerationOptions::period;
-    int digits = BaseGenerationOptions::digits;
-    SupportedAlgorithm algorithm = BaseGenerationOptions::algorithm;
-    uint64_t currentTime = static_cast<uint64_t>(
-        std::chrono::duration_cast<std::chrono::seconds>(
-            std::chrono::system_clock::now().time_since_epoch())
-            .count());
+std::string HybridNitroTotp::generate(const std::string &secret,
+                                      const NitroTotpGenerateOptions &options) {
+  int period = options.period.value();
+  int digits = options.digits.value();
+  SupportedAlgorithm algorithm = options.algorithm.value();
+  uint64_t currentTime = static_cast<uint64_t>(options.currentTime.value());
 
-    // Override defaults with options if provided
-    if (options.has_value()) {
-        const NitroTotpGenerateOptions &providedOpts = options.value();
+  // Compute time-based counter
+  uint64_t counter = static_cast<uint64_t>(currentTime) / period;
 
-        if (providedOpts.period.has_value()) {
-            period = providedOpts.period.value();
-        }
+  // Prepare options for HOTP generate function
+  NitroHOTPGenerateOptions generateOptions(counter, digits, algorithm);
 
-        if (providedOpts.digits.has_value()) {
-            digits = providedOpts.digits.value();
-        }
+  HybridNitroHotp hybridNitroHotp;
 
-        if (providedOpts.algorithm.has_value()) {
-            algorithm = providedOpts.algorithm.value();
-        }
-    }
-
-    // Compute time-based counter
-    uint64_t counter = static_cast<uint64_t>(currentTime) / period;
-
-    // Prepare options for HOTP generate function
-    NitroHOTPGenerateOptions generateOptions(counter, digits, algorithm);
-
-    HybridNitroHotp hybridNitroHotp;
-
-    // Call the HOTP generate function with the secret and updated options
-    return hybridNitroHotp.generate(secret, generateOptions);
+  // Call the HOTP generate function with the secret and updated options
+  return hybridNitroHotp.generate(secret, generateOptions);
 }
 
 // Validates the OTP
-bool HybridNitroTotp::validate(
-    const std::string &secret, const std::string &otp,
-    const std::optional<NitroTotpValidateOptions> &options) {
+bool HybridNitroTotp::validate(const std::string &secret,
+                               const std::string &otp,
+                               const NitroTotpValidateOptions &options) {
 
-    // Default values
-    int period = BaseGenerationOptions::period;
-    int digits = BaseGenerationOptions::digits;
-    SupportedAlgorithm algorithm = BaseGenerationOptions::algorithm;
-    int window = BaseValidationOptions::window;
-    uint64_t currentTime = static_cast<uint64_t>(
-        std::chrono::duration_cast<std::chrono::seconds>(
-            std::chrono::system_clock::now().time_since_epoch())
-            .count());
+  // Default values
+  int period = options.period.value();
+  int digits = options.digits.value();
+  SupportedAlgorithm algorithm = options.algorithm.value();
+  int window = options.window.value();
+  uint64_t currentTime = static_cast<uint64_t>(options.currentTime.value());
 
-    // Override defaults with options if provided
-    if (options.has_value()) {
-        const NitroTotpValidateOptions &providedOpts = options.value();
+  // Compute time-based counter
+  uint64_t counter = static_cast<uint64_t>(currentTime) / period;
 
-        if (providedOpts.period.has_value()) {
-            period = providedOpts.period.value();
-        }
+  // Set the counter in hotpOptions
+  // Prepare options for HOTP validate function
+  NitroHOTPValidateOptions validateOptions(counter, window, digits, algorithm);
 
-        if (providedOpts.digits.has_value()) {
-            digits = providedOpts.digits.value();
-        }
-
-        if (providedOpts.algorithm.has_value()) {
-            algorithm = providedOpts.algorithm.value();
-        }
-
-        if (providedOpts.window.has_value()) {
-            window = providedOpts.window.value();
-        }
-    }
-
-    // Compute time-based counter
-    uint64_t counter = static_cast<uint64_t>(currentTime) / period;
-
-    // Set the counter in hotpOptions
-    // Prepare options for HOTP validate function
-    NitroHOTPValidateOptions validateOptions(counter, window, digits,
-                                             algorithm);
-
-    HybridNitroHotp hybridNitroHotp;
-    return hybridNitroHotp.validate(secret, otp, validateOptions);
+  HybridNitroHotp hybridNitroHotp;
+  return hybridNitroHotp.validate(secret, otp, validateOptions);
 }
 
 } // namespace margelo::nitro::totp
