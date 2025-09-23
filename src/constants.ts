@@ -1,4 +1,4 @@
-import { SupportedAlgorithm } from './types'
+import { SupportedAlgorithm } from './types';
 
 export enum NitroTotpConstants {
   DEFAULT_DIGITS = 6,
@@ -17,4 +17,4 @@ export const defaultOptions = {
   period: NitroTotpConstants.DEFAULT_PERIOD,
   counter: NitroTotpConstants.DEFAULT_COUNTER,
   window: NitroTotpConstants.DEFAULT_WINDOW,
-} as const
+} as const;

@@ -17,8 +17,8 @@
 namespace margelo::nitro::totp { struct GenerateSecretKeyOptions; }
 
 #include <string>
-#include <optional>
 #include "GenerateSecretKeyOptions.hpp"
+#include <optional>
 
 namespace margelo::nitro::totp {
 

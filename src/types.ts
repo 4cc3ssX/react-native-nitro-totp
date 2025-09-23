@@ -9,40 +9,40 @@ export interface OTPAuthURLOptions extends BaseGenerateOptions {
    * The issuer of the secret key.
    * @type {string}
    */
-  issuer?: string
+  issuer?: string;
 
   /**
    * The label of the secret key.
    * @type {string}
    */
-  label?: string
+  label?: string;
 
   /**
    * The secret key to use for generating the OTP.
    * @type {string}
    */
-  secret: string
+  secret: string;
 
   /**
    * Whether to include the issuer in the label.
    * @type {boolean}
    * @default false
    */
-  issuerInLabel?: boolean
+  issuerInLabel?: boolean;
 
   /**
    * The period in seconds.
    * @type {number}
    * @default 30
    */
-  period?: number
+  period?: number;
 
   /**
    * The counter to use for generating the OTP.
    * @type {number}
    * @default 0
    */
-  counter?: number
+  counter?: number;
 }
 
 export interface GenerateSecretKeyOptions {
@@ -51,7 +51,7 @@ export interface GenerateSecretKeyOptions {
    * @type {number}
    * @default 12
    */
-  length?: number
+  length?: number;
 }
 
 export interface NitroTotpGenerateOptions extends BaseGenerateOptions {
@@ -60,7 +60,7 @@ export interface NitroTotpGenerateOptions extends BaseGenerateOptions {
    * @type {number}
    * @default 30
    */
-  period?: number
+  period?: number;
 }
 
 export interface NitroHOTPGenerateOptions extends BaseGenerateOptions {
@@ -69,7 +69,7 @@ export interface NitroHOTPGenerateOptions extends BaseGenerateOptions {
    * @type {number}
    * @default 0
    */
-  counter?: number
+  counter?: number;
 }
 
 export interface BaseGenerateOptions {
@@ -78,14 +78,14 @@ export interface BaseGenerateOptions {
    * @type {number}
    * @default 6
    */
-  digits?: number
+  digits?: number;
 
   /**
    * The algorithm to use for generating the OTP.
    * @type {SupportedAlgorithm}
    * @default SupportedAlgorithm.SHA1
    */
-  algorithm?: SupportedAlgorithm
+  algorithm?: SupportedAlgorithm;
 }
 
 export interface BaseValidateOptions extends BaseGenerateOptions {
@@ -94,7 +94,7 @@ export interface BaseValidateOptions extends BaseGenerateOptions {
    * @type {number}
    * @default 1
    */
-  window?: number
+  window?: number;
 }
 
 export interface NitroHOTPValidateOptions extends BaseValidateOptions {
@@ -103,7 +103,7 @@ export interface NitroHOTPValidateOptions extends BaseValidateOptions {
    * @type {number}
    * @default 0
    */
-  counter?: number
+  counter?: number;
 }
 
 export interface NitroTotpValidateOptions extends BaseValidateOptions {
@@ -112,5 +112,5 @@ export interface NitroTotpValidateOptions extends BaseValidateOptions {
    * @type {number}
    * @default 30
    */
-  period?: number
+  period?: number;
 }

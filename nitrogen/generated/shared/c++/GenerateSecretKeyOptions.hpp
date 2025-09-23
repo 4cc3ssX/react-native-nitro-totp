@@ -40,18 +40,16 @@ namespace margelo::nitro::totp {
 
 namespace margelo::nitro {
 
-  using namespace margelo::nitro::totp;
-
   // C++ GenerateSecretKeyOptions <> JS GenerateSecretKeyOptions (object)
   template <>
-  struct JSIConverter<GenerateSecretKeyOptions> final {
-    static inline GenerateSecretKeyOptions fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::totp::GenerateSecretKeyOptions> final {
+    static inline margelo::nitro::totp::GenerateSecretKeyOptions fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return GenerateSecretKeyOptions(
+      return margelo::nitro::totp::GenerateSecretKeyOptions(
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "length"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const GenerateSecretKeyOptions& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::totp::GenerateSecretKeyOptions& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "length", JSIConverter<std::optional<double>>::toJSI(runtime, arg.length));
       return obj;

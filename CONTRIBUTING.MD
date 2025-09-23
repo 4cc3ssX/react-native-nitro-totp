@@ -6,15 +6,45 @@ We want this community to be friendly and respectful to each other. Please follo
 
 ## Development workflow
 
-To get started with the project, run `bun install` in the root directory to install the required dependencies for each package:
+This project is a monorepo managed using [Yarn workspaces](https://yarnpkg.com/features/workspaces). It contains the following packages:
+
+- The library package in the root directory.
+- An example app in the `example/` directory.
+
+To get started with the project, make sure you have the correct version of [Node.js](https://nodejs.org/) installed. See the [`.nvmrc`](./.nvmrc) file for the version used in this project.
+
+Run `yarn` in the root directory to install the required dependencies for each package:
 
 ```sh
-bun install
+yarn
 ```
 
-> While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`bun`](https://bun.sh/), so you'll have an easier time if you use `bun` for development.
+> Since the project relies on Yarn workspaces, you cannot use [`npm`](https://github.com/npm/cli) for development without manually migrating.
 
-While developing, you can run the [example app](/example/) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the example app without a rebuild. If you change any native code, then you'll need to rebuild the example app.
+This project uses Nitro Modules. If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/).
+
+You need to run [Nitrogen](https://nitro.margelo.com/docs/nitrogen) to generate the boilerplate code required for this project. The example app will not build without this step.
+
+Run **Nitrogen** in following cases:
+
+- When you make changes to any `*.nitro.ts` files.
+- When running the project for the first time (since the generated files are not committed to the repository).
+
+To invoke **Nitrogen**, use the following command:
+
+```sh
+yarn nitrogen
+```
+
+The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
+
+It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
+
+If you want to use Android Studio or XCode to edit the native code, you can open the `example/android` or `example/ios` directories respectively in those editors. To edit the Objective-C or Swift files, open `example/ios/NitroTotpExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-nitro-totp`.
+
+To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `react-native-nitro-totp` under `Android`.
+
+You can use various commands from the root directory to work with the project.
 
 To start the packager:
 
@@ -22,25 +52,16 @@ To start the packager:
 yarn example start
 ```
 
-The example is configured to build with the new architecture, you can do the following:
-
-1. For Android, run:
-
-   ```sh
-   ORG_GRADLE_PROJECT_newArchEnabled=true yarn example android
-   ```
-
-2. For iOS, run:
-
-   ```sh
-   RCT_NEW_ARCH_ENABLED=1 yarn example pods
-   yarn example ios
-   ```
-
-If you are building for a different architecture than your previous build, make sure to remove the build folders first. You can run the following command to cleanup all build folders:
+To run the example app on Android:
 
 ```sh
-yarn clean
+yarn example android
+```
+
+To run the example app on iOS:
+
+```sh
+yarn example ios
 ```
 
 To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
@@ -70,11 +91,6 @@ Remember to add tests for your change if possible. Run the unit tests by:
 yarn test
 ```
 
-To edit the Objective-C or Swift files, open `example/ios/NitroTotpExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > NitroTotp`.
-
-To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `react-native-nitro-totp` under `Android`.
-
-
 ### Commit message convention
 
 We follow the [conventional commits specification](https://www.conventionalcommits.org/en) for our commit messages:
@@ -82,7 +98,7 @@ We follow the [conventional commits specification](https://www.conventionalcommi
 - `fix`: bug fixes, e.g. fix crash due to deprecated method.
 - `feat`: new features, e.g. add new method to the module.
 - `refactor`: code refactor, e.g. migrate from class components to hooks.
-- `docs`: changes into documentation, e.g. add usage example for the module..
+- `docs`: changes into documentation, e.g. add usage example for the module.
 - `test`: adding or updating tests, e.g. add integration tests using detox.
 - `chore`: tooling changes, e.g. change CI config.
 
@@ -110,7 +126,7 @@ yarn release
 
 The `package.json` file contains various scripts for common tasks:
 
-- `yarn bootstrap`: setup project by installing all dependencies and pods.
+- `yarn`: setup project by installing dependencies.
 - `yarn typecheck`: type-check files with TypeScript.
 - `yarn lint`: lint files with ESLint.
 - `yarn test`: run unit tests with Jest.

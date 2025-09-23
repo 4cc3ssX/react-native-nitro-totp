@@ -17,14 +17,11 @@
 namespace margelo::nitro::totp { struct NitroHOTPGenerateOptions; }
 // Forward declaration of `NitroHOTPValidateOptions` to properly resolve imports.
 namespace margelo::nitro::totp { struct NitroHOTPValidateOptions; }
-// Forward declaration of `OTPAuthURLOptions` to properly resolve imports.
-namespace margelo::nitro::totp { struct OTPAuthURLOptions; }
 
 #include <string>
-#include <optional>
 #include "NitroHOTPGenerateOptions.hpp"
+#include <optional>
 #include "NitroHOTPValidateOptions.hpp"
-#include "OTPAuthURLOptions.hpp"
 
 namespace margelo::nitro::totp {
 
@@ -59,7 +56,6 @@ namespace margelo::nitro::totp {
       // Methods
       virtual std::string generate(const std::string& secret, const std::optional<NitroHOTPGenerateOptions>& options) = 0;
       virtual bool validate(const std::string& secret, const std::string& otp, const std::optional<NitroHOTPValidateOptions>& options) = 0;
-      virtual std::string generateAuthURL(const OTPAuthURLOptions& options) = 0;
 
     protected:
       // Hybrid Setup
