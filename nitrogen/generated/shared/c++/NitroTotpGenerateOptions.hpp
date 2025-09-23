@@ -32,12 +32,13 @@ namespace margelo::nitro::totp {
   struct NitroTotpGenerateOptions {
   public:
     std::optional<double> period     SWIFT_PRIVATE;
+    std::optional<double> currentTime     SWIFT_PRIVATE;
     std::optional<double> digits     SWIFT_PRIVATE;
     std::optional<SupportedAlgorithm> algorithm     SWIFT_PRIVATE;
 
   public:
     NitroTotpGenerateOptions() = default;
-    explicit NitroTotpGenerateOptions(std::optional<double> period, std::optional<double> digits, std::optional<SupportedAlgorithm> algorithm): period(period), digits(digits), algorithm(algorithm) {}
+    explicit NitroTotpGenerateOptions(std::optional<double> period, std::optional<double> currentTime, std::optional<double> digits, std::optional<SupportedAlgorithm> algorithm): period(period), currentTime(currentTime), digits(digits), algorithm(algorithm) {}
   };
 
 } // namespace margelo::nitro::totp
@@ -51,6 +52,7 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::totp::NitroTotpGenerateOptions(
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "period")),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "currentTime")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "digits")),
         JSIConverter<std::optional<margelo::nitro::totp::SupportedAlgorithm>>::fromJSI(runtime, obj.getProperty(runtime, "algorithm"))
       );
@@ -58,6 +60,7 @@ namespace margelo::nitro {
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::totp::NitroTotpGenerateOptions& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "period", JSIConverter<std::optional<double>>::toJSI(runtime, arg.period));
+      obj.setProperty(runtime, "currentTime", JSIConverter<std::optional<double>>::toJSI(runtime, arg.currentTime));
       obj.setProperty(runtime, "digits", JSIConverter<std::optional<double>>::toJSI(runtime, arg.digits));
       obj.setProperty(runtime, "algorithm", JSIConverter<std::optional<margelo::nitro::totp::SupportedAlgorithm>>::toJSI(runtime, arg.algorithm));
       return obj;
@@ -68,6 +71,7 @@ namespace margelo::nitro {
       }
       jsi::Object obj = value.getObject(runtime);
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "period"))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "currentTime"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "digits"))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::totp::SupportedAlgorithm>>::canConvert(runtime, obj.getProperty(runtime, "algorithm"))) return false;
       return true;

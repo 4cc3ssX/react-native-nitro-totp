@@ -1,0 +1,58 @@
+{
+  "$schema": "https://unpkg.com/release-it@19/schema/release-it.json",
+  "git": {
+    "tagName": "v${version}",
+    "tagAnnotation": "Release v${version}",
+    "commitMessage": "chore: release v${version}"
+  },
+  "github": {
+    "release": true,
+    "releaseName": "Release v${version}"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "infile": "CHANGELOG.md",
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          {
+            "type": "feat",
+            "section": "🚀 Features"
+          },
+          {
+            "type": "fix",
+            "section": "🐛 Bug Fixes"
+          },
+          {
+            "type": "chore",
+            "section": "🧹 Chore"
+          },
+          {
+            "type": "docs",
+            "section": "📚 Documentation"
+          },
+          {
+            "type": "style",
+            "section": "💄 Styles"
+          },
+          {
+            "type": "refactor",
+            "section": "📦 Refactor"
+          },
+          {
+            "type": "perf",
+            "section": "🏎 Performance"
+          },
+          {
+            "type": "test",
+            "section": "🚨 Tests"
+          },
+          {
+            "type": "build",
+            "section": "🛠 Build System"
+          }
+        ]
+      }
+    }
+  }
+}

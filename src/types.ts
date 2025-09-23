@@ -61,6 +61,13 @@ export interface NitroTotpGenerateOptions extends BaseGenerateOptions {
    * @default 30
    */
   period?: number;
+
+  /**
+   * The current time in seconds since Unix epoch.
+   * @type {number}
+   * @internal
+   */
+  currentTime?: number;
 }
 
 export interface NitroHOTPGenerateOptions extends BaseGenerateOptions {
@@ -113,4 +120,11 @@ export interface NitroTotpValidateOptions extends BaseValidateOptions {
    * @default 30
    */
   period?: number;
+
+  /**
+   * The current time in seconds since Unix epoch.
+   * @type {number}
+   * @internal
+   */
+  currentTime?: number;
 }

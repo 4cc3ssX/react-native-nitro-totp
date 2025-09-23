@@ -20,7 +20,6 @@ namespace margelo::nitro::totp { struct NitroHOTPValidateOptions; }
 
 #include <string>
 #include "NitroHOTPGenerateOptions.hpp"
-#include <optional>
 #include "NitroHOTPValidateOptions.hpp"
 
 namespace margelo::nitro::totp {
@@ -54,8 +53,8 @@ namespace margelo::nitro::totp {
 
     public:
       // Methods
-      virtual std::string generate(const std::string& secret, const std::optional<NitroHOTPGenerateOptions>& options) = 0;
-      virtual bool validate(const std::string& secret, const std::string& otp, const std::optional<NitroHOTPValidateOptions>& options) = 0;
+      virtual std::string generate(const std::string& secret, const NitroHOTPGenerateOptions& options) = 0;
+      virtual bool validate(const std::string& secret, const std::string& otp, const NitroHOTPValidateOptions& options) = 0;
 
     protected:
       // Hybrid Setup

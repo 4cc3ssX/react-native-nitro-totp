@@ -10,6 +10,7 @@ A high-performance React Native library for generating and validating Time-based
 - 🛡️ **Multiple Algorithms**: Support for SHA1, SHA256, and SHA512
 - 📱 **QR Code URLs**: Generate otpauth:// URLs for easy QR code integration
 - ✅ **Validation**: Built-in OTP validation with configurable time windows
+- 🌍 **Custom Time Support**: Generate and validate OTPs for specific times (time zone testing, historical validation)
 - 🔧 **Utility Functions**: Helper functions for formatting and parsing secret keys
 - 📚 **TypeScript**: Full TypeScript support with comprehensive type definitions
 
@@ -102,7 +103,7 @@ export default function TotpExample() {
   // Generate TOTP code
   const generateTOTP = useCallback(() => {
     if (!secretKey || !isSecretKeyValid(secretKey)) return;
-    
+
     const secret = parseSecretKey(secretKey);
     const code = nitroTotp.generate(secret);
     setTotpCode(formatOTP(code));
@@ -111,7 +112,7 @@ export default function TotpExample() {
   // Generate Auth URL for QR codes
   const generateAuthURL = () => {
     if (!secretKey) return '';
-    
+
     const secret = parseSecretKey(secretKey);
     return nitroTotp.generateAuthURL({
       secret,
@@ -129,7 +130,7 @@ export default function TotpExample() {
       const now = Date.now();
       const timeLeft = 30 - Math.floor((now / 1000) % 30);
       setTimeRemaining(timeLeft);
-      
+
       if (timeLeft === 30) {
         generateTOTP();
       }
@@ -141,17 +142,17 @@ export default function TotpExample() {
   return (
     <View style={{ padding: 20 }}>
       <Button title="Generate Secret" onPress={generateSecret} />
-      
+
       <TextInput
         value={secretKey}
         onChangeText={setSecretKey}
         placeholder="Secret key"
         style={{ borderWidth: 1, marginVertical: 10, padding: 10 }}
       />
-      
+
       <Text>TOTP Code: {totpCode}</Text>
       <Text>Time remaining: {timeRemaining}s</Text>
-      
+
       <Button title="Generate TOTP" onPress={generateTOTP} />
     </View>
   );
@@ -248,9 +249,10 @@ interface BaseGenerateOptions {
 
 interface NitroTotpGenerateOptions extends BaseGenerateOptions {
   period?: number;              // Default: 30 seconds
+  currentTime?: number;         // Unix timestamp in seconds, defaults to current time
 }
 
-interface NitroHOTPGenerateOptions extends BaseGenerateOptions {  
+interface NitroHOTPGenerateOptions extends BaseGenerateOptions {
   counter?: number;             // Default: 0
 }
 
@@ -268,6 +270,7 @@ interface BaseValidateOptions extends BaseGenerateOptions {
 
 interface NitroTotpValidateOptions extends BaseValidateOptions {
   period?: number;              // Default: 30 seconds
+  currentTime?: number;         // Unix timestamp in seconds, defaults to current time
 }
 
 interface NitroHOTPValidateOptions extends BaseValidateOptions {
@@ -315,6 +318,42 @@ const code = nitroTotp.generate(secret, {
 });
 ```
 
+### TOTP with Custom Time (Time Zone Testing)
+
+The `currentTime` parameter allows you to generate TOTP codes for specific times, which is useful for testing across different time zones or generating codes for specific moments.
+
+```ts
+import { NitroTotp } from 'react-native-nitro-totp';
+
+const nitroTotp = new NitroTotp();
+
+// Generate TOTP for current time (default behavior)
+const currentCode = nitroTotp.generate(secret);
+
+// Generate TOTP for a specific time (Unix timestamp in seconds)
+const specificTime = Math.floor(Date.now() / 1000); // Current time in seconds
+const codeForTime = nitroTotp.generate(secret, {
+  currentTime: specificTime
+});
+
+// Generate TOTP for different time zones
+const utcTime = Math.floor(Date.now() / 1000);
+const tokyoTime = utcTime + (9 * 3600); // UTC+9
+const newYorkTime = utcTime - (5 * 3600); // UTC-5
+
+const tokyoCode = nitroTotp.generate(secret, { currentTime: tokyoTime });
+const newYorkCode = nitroTotp.generate(secret, { currentTime: newYorkTime });
+
+// Generate TOTP for a specific date
+const specificDate = new Date('2024-01-01T12:00:00Z');
+const timestampForDate = Math.floor(specificDate.getTime() / 1000);
+const codeForDate = nitroTotp.generate(secret, {
+  currentTime: timestampForDate
+});
+```
+
+> **Note**: The `currentTime` parameter expects a Unix timestamp in **seconds**, not milliseconds. Use `Math.floor(Date.now() / 1000)` to convert JavaScript's millisecond timestamps.
+
 ### HOTP with Counter
 
 ```ts
@@ -346,7 +385,7 @@ const totpUrl = nitroTotp.generateAuthURL({
 // For HOTP
 const hotpUrl = nitroHotp.generateAuthURL({
   secret: parseSecretKey(secretKey),
-  issuer: 'My Awesome App', 
+  issuer: 'My Awesome App',
   label: 'user@example.com',
   algorithm: SupportedAlgorithm.SHA1,
   digits: 6,
@@ -368,6 +407,34 @@ const isValidPermissive = nitroTotp.validate(secret, userEnteredOTP, {
 });
 ```
 
+### Validation with Custom Time
+
+```ts
+// Validate TOTP for current time (default behavior)
+const isValidNow = nitroTotp.validate(secret, userEnteredOTP);
+
+// Validate TOTP for a specific time (useful for testing or time zone handling)
+const specificTime = Math.floor(Date.now() / 1000) - 30; // 30 seconds ago
+const isValidForTime = nitroTotp.validate(secret, userEnteredOTP, {
+  currentTime: specificTime,
+  window: 1
+});
+
+// Example: Validate codes across different time zones
+const validateForTimeZone = (secret: string, otp: string, timezoneOffsetHours: number) => {
+  const utcTime = Math.floor(Date.now() / 1000);
+  const zoneTime = utcTime + (timezoneOffsetHours * 3600);
+
+  return nitroTotp.validate(secret, otp, {
+    currentTime: zoneTime,
+    window: 1
+  });
+};
+
+// Validate for Tokyo time (UTC+9)
+const isValidInTokyo = validateForTimeZone(secret, userEnteredOTP, 9);
+```
+
 ## Best Practices
 
 ### Security Considerations
@@ -381,7 +448,7 @@ const isValidPermissive = nitroTotp.validate(secret, userEnteredOTP, {
 
 3. **Validation Windows**: Use appropriate time windows - larger windows are more user-friendly but less secure
 
-4. **Algorithm Choice**: 
+4. **Algorithm Choice**:
    - SHA1: Most compatible with existing authenticator apps
    - SHA256/SHA512: More secure but ensure compatibility
 
@@ -391,7 +458,7 @@ const isValidPermissive = nitroTotp.validate(secret, userEnteredOTP, {
    ```ts
    // ✅ Good - create once, reuse
    const nitroTotp = new NitroTotp();
-   
+
    // ❌ Avoid - creating new instances repeatedly
    const generateCode = () => new NitroTotp().generate(secret);
    ```
@@ -408,7 +475,7 @@ const generateTOTP = (secretKey: string) => {
   if (!isSecretKeyValid(secretKey)) {
     throw new Error('Invalid secret key format');
   }
-  
+
   try {
     const secret = parseSecretKey(secretKey);
     return nitroTotp.generate(secret);
@@ -423,11 +490,11 @@ const validateTOTP = (secretKey: string, otp: string) => {
   if (!isSecretKeyValid(secretKey)) {
     return { valid: false, error: 'Invalid secret key' };
   }
-  
+
   if (!isOTPValid(otp)) {
     return { valid: false, error: 'Invalid OTP format' };
   }
-  
+
   try {
     const secret = parseSecretKey(secretKey);
     const valid = nitroTotp.validate(secret, otp);
@@ -460,7 +527,7 @@ const validateTOTP = (secretKey: string, otp: string) => {
 
 The library generates standard-compliant OTPs that work with:
 - Google Authenticator
-- Microsoft Authenticator  
+- Microsoft Authenticator
 - Authy
 - 1Password
 - Bitwarden

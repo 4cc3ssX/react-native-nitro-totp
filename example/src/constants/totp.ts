@@ -1,0 +1,8 @@
+export const TOTP_PERIOD_SECONDS = 30;
+export const UPDATE_INTERVAL_MS = 1000;
+export const SECRET_DISPLAY_LENGTH = 8;
+export const PROGRESS_BAR_HEIGHT = 6;
+export const PROGRESS_BAR_BORDER_RADIUS = 3;
+export const PERCENTAGE_MULTIPLIER = 100;
+export const TIME_WARNING_THRESHOLD = 20;
+export const TIME_CRITICAL_THRESHOLD = 10;

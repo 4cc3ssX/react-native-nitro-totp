@@ -18,7 +18,6 @@ namespace margelo::nitro::totp { struct GenerateSecretKeyOptions; }
 
 #include <string>
 #include "GenerateSecretKeyOptions.hpp"
-#include <optional>
 
 namespace margelo::nitro::totp {
 
@@ -51,7 +50,7 @@ namespace margelo::nitro::totp {
 
     public:
       // Methods
-      virtual std::string generate(const std::optional<GenerateSecretKeyOptions>& options) = 0;
+      virtual std::string generate(const GenerateSecretKeyOptions& options) = 0;
 
     protected:
       // Hybrid Setup
