@@ -2,6 +2,48 @@
 
 A high-performance React Native library for generating and validating Time-based One-Time Passwords (TOTP) and HMAC-based One-Time Passwords (HOTP) using [Nitro Modules](https://nitro.margelo.com/) for native performance.
 
+## Quick Links
+
+- [react-native-nitro-totp](#react-native-nitro-totp)
+  - [Quick Links](#quick-links)
+  - [Demo](#demo)
+  - [Features](#features)
+  - [Installation](#installation)
+  - [Quick Start](#quick-start)
+  - [Example](#example)
+  - [API Reference](#api-reference)
+    - [Classes](#classes)
+      - [`NitroSecret`](#nitrosecret)
+      - [`NitroTotp`](#nitrototp)
+      - [`NitroHotp`](#nitrohotp)
+    - [Utility Functions](#utility-functions)
+    - [Types and Interfaces](#types-and-interfaces)
+      - [Supported Algorithms](#supported-algorithms)
+      - [Secret Sizes](#secret-sizes)
+      - [Generation Options](#generation-options)
+      - [Validation Options](#validation-options)
+      - [Auth URL Options](#auth-url-options)
+  - [Usage Examples](#usage-examples)
+    - [Secret Key Generation](#secret-key-generation)
+    - [Basic TOTP](#basic-totp)
+    - [Custom TOTP with SHA256](#custom-totp-with-sha256)
+    - [TOTP with Custom Time (Time Zone Testing)](#totp-with-custom-time-time-zone-testing)
+    - [HOTP with Counter](#hotp-with-counter)
+    - [Generating QR Code URLs](#generating-qr-code-urls)
+    - [Validation with Time Window](#validation-with-time-window)
+    - [Validation with Custom Time](#validation-with-custom-time)
+  - [Best Practices](#best-practices)
+    - [Security Considerations](#security-considerations)
+    - [Performance Tips](#performance-tips)
+    - [Error Handling](#error-handling)
+  - [Troubleshooting](#troubleshooting)
+    - [Common Issues](#common-issues)
+    - [Integration with Popular Apps](#integration-with-popular-apps)
+  - [Platform Support](#platform-support)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Acknowledgments](#acknowledgments)
+
 ## Demo
 
 | TOTP | HOTP | Timezone |
@@ -77,7 +119,7 @@ const hotpCode = nitroHotp.generate(parseSecretKey(formattedSecret), { counter: 
 console.log('HOTP Code:', formatOTP(hotpCode)); // e.g., "654 321"
 ```
 
-## Complete Example
+## Example
 
 Here's a complete example showing all major features:
 
@@ -291,12 +333,11 @@ interface NitroHOTPGenerateOptions extends BaseGenerateOptions {
   counter?: number;             // Default: 0
 }
 
-```ts
 interface GenerateSecretKeyOptions {
   size?: number | SecretSize;   // Default: SecretSize.STANDARD (20 bytes = 32 chars)
 }
 ```
-```
+
 
 #### Validation Options
 
