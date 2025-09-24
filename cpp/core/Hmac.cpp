@@ -27,7 +27,6 @@ std::vector<uint8_t> compute(const std::string &algorithm,
     throw std::runtime_error("Unsupported algorithm");
   }
 
-  // Fetch the MAC implementation
   mac = EVP_MAC_fetch(nullptr, mac_name, nullptr);
   if (!mac) {
     throw std::runtime_error("Failed to fetch HMAC");

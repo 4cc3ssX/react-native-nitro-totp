@@ -9,7 +9,6 @@ public:
   HybridNitroSecret() : HybridObject(TAG) {}
 
 public:
-  // Generates secret key based on options
   std::string generate(const GenerateSecretKeyOptions &options) override;
 
   void loadHybridMethods() override {

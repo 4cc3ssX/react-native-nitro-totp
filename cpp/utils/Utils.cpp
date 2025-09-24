@@ -5,14 +5,12 @@
 
 namespace margelo::nitro::totp {
 
-// Helper method to format OTP with leading zeros
 std::string Utils::formatOtp(uint32_t otp, int digits) {
   std::ostringstream ss;
   ss << std::setw(digits) << std::setfill('0') << otp;
   return ss.str();
 }
 
-// Helper method to get supported algorithm name
 std::string Utils::getAlgorithmName(SupportedAlgorithm algorithm) {
   switch (algorithm) {
   case SupportedAlgorithm::SHA1:
