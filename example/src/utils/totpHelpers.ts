@@ -2,7 +2,6 @@ import { colors } from '../theme/colors';
 import {
   TOTP_PERIOD_SECONDS,
   SECRET_DISPLAY_LENGTH,
-  PERCENTAGE_MULTIPLIER,
   TIME_WARNING_THRESHOLD,
   TIME_CRITICAL_THRESHOLD,
 } from '../constants';
@@ -12,16 +11,6 @@ import {
  */
 export const calculateTimeRemaining = (unixTimestamp: number): number => {
   return TOTP_PERIOD_SECONDS - (unixTimestamp % TOTP_PERIOD_SECONDS);
-};
-
-/**
- * Calculate progress percentage based on time remaining
- */
-export const getProgressPercentage = (timeRemaining: number): number => {
-  return (
-    ((TOTP_PERIOD_SECONDS - timeRemaining) / TOTP_PERIOD_SECONDS) *
-    PERCENTAGE_MULTIPLIER
-  );
 };
 
 /**

@@ -37,7 +37,7 @@ export default function App() {
             component={HomeScreen}
             options={{
               title: 'NitroTotp',
-              headerTitle: '🔐 NitroTotp',
+              headerTitle: 'Home',
             }}
           />
           <Stack.Screen

@@ -1,15 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  Alert,
-  Button,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, View, Text, ScrollView, Alert } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { ProgressBar } from '../components';
+import { ProgressBar, Button, Input } from '../components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -19,36 +11,39 @@ import {
   formatSecretKey,
   NitroTotp,
   parseSecretKey,
+  NitroSecret,
 } from 'react-native-nitro-totp';
 
-import {
-  calculateTimeRemaining,
-  getProgressPercentage,
-  getProgressColor,
-  formatSecretForDisplay,
-} from '../utils/totpHelpers';
+import { calculateTimeRemaining, getProgressColor } from '../utils/totpHelpers';
 import {
   UPDATE_INTERVAL_MS,
   PROGRESS_BAR_HEIGHT,
   PROGRESS_BAR_BORDER_RADIUS,
-  PERCENTAGE_MULTIPLIER,
+  TOTP_PERIOD_SECONDS,
 } from '../constants';
 import { colors } from '../theme/colors';
+import { TotpConfigs } from '../configs/totp';
 
 // Extend dayjs with required plugins
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-// Constants
-const DEFAULT_SECRET_KEY = 'JBSWY3DPEHPK3PXP';
-
 const nitroTotp = new NitroTotp();
+const nitroSecret = new NitroSecret();
 
 interface TimezoneData {
+  /**
+   * Name of the timezone
+   */
   name: string;
-  offset: number; // offset in hours from UTC for display
+  /**
+   * Offset in hours from UTC for display
+   */
+  offset: number;
+  /**
+   * Description of the timezone
+   */
   description: string;
-  dayjsZone?: string; // dayjs timezone identifier
 }
 
 const timezones: TimezoneData[] = [
@@ -56,61 +51,83 @@ const timezones: TimezoneData[] = [
     name: 'UTC',
     offset: 0,
     description: 'Coordinated Universal Time',
-    dayjsZone: 'UTC',
   },
   {
     name: 'EST',
     offset: -5,
     description: 'Eastern Standard Time',
-    dayjsZone: 'America/New_York',
   },
   {
     name: 'PST',
     offset: -8,
     description: 'Pacific Standard Time',
-    dayjsZone: 'America/Los_Angeles',
   },
   {
     name: 'CET',
     offset: 1,
     description: 'Central European Time',
-    dayjsZone: 'Europe/Berlin',
   },
   {
     name: 'JST',
     offset: 9,
     description: 'Japan Standard Time',
-    dayjsZone: 'Asia/Tokyo',
+  },
+  {
+    name: 'ICT',
+    offset: 7,
+    description: 'Indochina Time',
   },
   {
     name: 'AEST',
     offset: 10,
     description: 'Australian Eastern Standard Time',
-    dayjsZone: 'Australia/Sydney',
   },
 ];
 
 interface TOTPResult {
   timezone: string;
   currentTime: Date;
+  timezoneTimeString: string; // Add this for proper timezone display
+  timezoneDateString: string; // Add this for proper timezone date display
   totpCode: string;
   timeRemaining: number;
 }
 
 export default function TimeZonesScreen() {
-  const [secretKey] = useState<string>(formatSecretKey(DEFAULT_SECRET_KEY));
+  const [secretKey, setSecretKey] = useState<string>(
+    formatSecretKey(TotpConfigs.DEFAULT_SECRET_KEY)
+  );
   const [totpResults, setTotpResults] = useState<TOTPResult[]>([]);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
+  const generateSecretKey = () => {
+    const secret = nitroSecret.generate();
+    const formattedSecret = formatSecretKey(secret);
+    setSecretKey(formattedSecret);
+    generateTOTPForTimezones();
+  };
+
+  const onSecretKeyChange = (text: string) => {
+    setSecretKey(text);
+
+    if (!nitroSecret.isValid(text)) {
+      setTotpResults([]);
+      return;
+    }
+
+    generateTOTPForTimezones();
+  };
+
   const generateTOTPForTimezones = useCallback(() => {
+    if (!nitroSecret.isValid(secretKey)) {
+      return;
+    }
+
     const secret = parseSecretKey(secretKey);
     const results: TOTPResult[] = [];
 
     timezones.forEach((tz) => {
-      // Get current time in the specific timezone using dayjs
-      const timezoneTime = tz.dayjsZone
-        ? dayjs().tz(tz.dayjsZone)
-        : dayjs().utcOffset(tz.offset);
+      const timezoneTime = dayjs().utcOffset(tz.offset * 60); // Fallback to manual offset if no zone provided
 
       // Generate TOTP using the timezone's current time
       const code = nitroTotp.generate(secret, {
@@ -123,6 +140,8 @@ export default function TimeZonesScreen() {
       results.push({
         timezone: tz.name,
         currentTime: timezoneTime.toDate(),
+        timezoneTimeString: timezoneTime.format('HH:mm:ss'),
+        timezoneDateString: timezoneTime.format('MMM DD, YYYY'),
         totpCode: formatOTP(code),
         timeRemaining,
       });
@@ -141,10 +160,6 @@ export default function TimeZonesScreen() {
     return dayjs(date).format('HH:mm:ss');
   };
 
-  const formatDate = (date: Date): string => {
-    return dayjs(date).format('MMM DD, YYYY');
-  };
-
   useEffect(() => {
     generateTOTPForTimezones();
     const interval = setInterval(generateTOTPForTimezones, UPDATE_INTERVAL_MS);
@@ -152,34 +167,38 @@ export default function TimeZonesScreen() {
   }, [generateTOTPForTimezones]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerSection}>
           <Text style={styles.title}>Time Zone OTP Generation</Text>
           <Text style={styles.subtitle}>
             Testing currentTime parameter across different time zones
           </Text>
-          <Text style={styles.secretInfo}>
-            Secret: {formatSecretForDisplay(secretKey)}
-          </Text>
           <Text style={styles.lastUpdate}>
             Last updated: {formatTime(lastUpdate)}
           </Text>
+          <Input
+            placeholder="Enter or generate a secret key"
+            value={secretKey}
+            onChangeText={onSecretKeyChange}
+            multiline
+          />
+
+          <Button
+            title="Generate Random Secret"
+            onPress={generateSecretKey}
+            style={{ marginTop: 12 }}
+          />
         </View>
 
         <View style={styles.refreshSection}>
-          <Button
-            title="Refresh All"
-            onPress={generateTOTPForTimezones}
-            color="#2196F3"
-          />
+          <Button title="Refresh All" onPress={generateTOTPForTimezones} />
         </View>
 
         {totpResults.map((result, index) => {
           const tz = timezones[index];
-          const progressPercentage = getProgressPercentage(
-            result.timeRemaining
-          );
+          const progressPercentage =
+            (result.timeRemaining / TOTP_PERIOD_SECONDS) * 100;
           const progressColor = getProgressColor(result.timeRemaining);
 
           return (
@@ -193,10 +212,10 @@ export default function TimeZonesScreen() {
 
               <View style={styles.timeInfo}>
                 <Text style={styles.currentTime}>
-                  {formatTime(result.currentTime)}
+                  {result.timezoneTimeString}
                 </Text>
                 <Text style={styles.currentDate}>
-                  {formatDate(result.currentTime)}
+                  {result.timezoneDateString}
                 </Text>
                 <Text style={styles.offsetInfo}>
                   UTC{(tz?.offset || 0) >= 0 ? '+' : ''}
@@ -210,7 +229,7 @@ export default function TimeZonesScreen() {
                   Expires in: {result.timeRemaining}s
                 </Text>
                 <ProgressBar
-                  progress={progressPercentage / PERCENTAGE_MULTIPLIER}
+                  progress={progressPercentage / 100}
                   height={PROGRESS_BAR_HEIGHT}
                   color={progressColor}
                   unfilledColor={colors.unfilled}
@@ -227,7 +246,6 @@ export default function TimeZonesScreen() {
                       `${result.timezone} TOTP Code`
                     )
                   }
-                  color="#666"
                 />
               </View>
             </View>
@@ -248,7 +266,7 @@ export default function TimeZonesScreen() {
           </Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -270,20 +288,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    alignItems: 'center',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 8,
-    textAlign: 'center',
   },
   subtitle: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 12,
-    textAlign: 'center',
   },
   secretInfo: {
     fontSize: 12,
@@ -293,6 +307,7 @@ const styles = StyleSheet.create({
   lastUpdate: {
     fontSize: 12,
     color: '#888',
+    marginVertical: 12,
   },
   refreshSection: {
     marginBottom: 20,
@@ -384,5 +399,22 @@ const styles = StyleSheet.create({
     color: '#666',
     lineHeight: 20,
     marginBottom: 12,
+  },
+  section: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 24,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 16,
+    color: '#1a1a1a',
   },
 });

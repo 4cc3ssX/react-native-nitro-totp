@@ -50,7 +50,7 @@ export function Button({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 12,
+    borderRadius: 20,
     padding: 16,
     alignItems: 'center',
     justifyContent: 'center',

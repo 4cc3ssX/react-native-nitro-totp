@@ -1,43 +1,41 @@
 import { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, View, Text, ScrollView, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { ProgressBar, Button, Input, QRCode } from '../components';
+import { useTimer } from '../hooks/useTimer';
 
-import { getProgressPercentage, getProgressColor } from '../utils/totpHelpers';
-import {
-  PROGRESS_BAR_HEIGHT,
-  PROGRESS_BAR_BORDER_RADIUS,
-  PERCENTAGE_MULTIPLIER,
-} from '../constants';
+import { getProgressColor } from '../utils/totpHelpers';
+import { PROGRESS_BAR_HEIGHT, PROGRESS_BAR_BORDER_RADIUS } from '../constants';
 import { colors } from '../theme/colors';
 
 import {
   formatOTP,
   formatSecretKey,
-  isSecretKeyValid,
   NitroTotp,
   parseSecretKey,
   SupportedAlgorithm,
   NitroSecret,
 } from 'react-native-nitro-totp';
-
-const DEFAULT_SECRET_KEY = 'JBSWY3DPEHPK3PXP';
+import { TotpConfigs } from '../configs/totp';
 
 const nitroTotp = new NitroTotp();
 const nitroSecret = new NitroSecret();
 
 export default function TOTPScreen() {
   const [secretKey, setSecretKey] = useState<string>(
-    formatSecretKey(DEFAULT_SECRET_KEY)
+    formatSecretKey(TotpConfigs.DEFAULT_SECRET_KEY)
   );
   const [totpCode, setTotpCode] = useState<string>('');
   const [testOtp, setTestOtp] = useState<string>('');
   const [validationResult, setValidationResult] = useState<boolean | null>(
     null
   );
-  const [timeRemaining, setTimeRemaining] = useState<number>(30);
   const [totpAuthURL, setTotpAuthURL] = useState<string>('');
+
+  const { timeRemaining, progress } = useTimer({
+    period: 30,
+    autoStart: true,
+  });
 
   const generateSecretKey = () => {
     const secret = nitroSecret.generate();
@@ -90,39 +88,32 @@ export default function TOTPScreen() {
 
   const onSecretKeyChange = (text: string) => {
     setSecretKey(text);
-    if (isSecretKeyValid(text)) {
+    if (nitroSecret.isValid(text)) {
       generateAuthURL();
     }
   };
 
   useEffect(() => {
-    generateAuthURL(DEFAULT_SECRET_KEY);
+    generateAuthURL(TotpConfigs.DEFAULT_SECRET_KEY);
 
-    const secret = parseSecretKey(formatSecretKey(DEFAULT_SECRET_KEY));
+    const secret = parseSecretKey(
+      formatSecretKey(TotpConfigs.DEFAULT_SECRET_KEY)
+    );
     const code = nitroTotp.generate(secret);
     setTotpCode(formatOTP(code));
   }, [generateAuthURL]);
 
-  const updateTimer = useCallback(() => {
-    const now = Date.now();
-    const timeLeft = 30 - Math.floor((now / 1000) % 30);
-    setTimeRemaining(timeLeft);
-
-    if (timeLeft === 30 && secretKey) {
+  // Generate TOTP when timer resets (timeRemaining goes from 1 to 30)
+  useEffect(() => {
+    if (timeRemaining === 30 && secretKey) {
       generateTOTP();
     }
-  }, [secretKey, generateTOTP]);
+  }, [timeRemaining, secretKey, generateTOTP]);
 
-  useEffect(() => {
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
-  }, [updateTimer]);
-
-  const progressPercentage = getProgressPercentage(timeRemaining);
   const progressColor = getProgressColor(timeRemaining);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Secret Key</Text>
@@ -132,16 +123,22 @@ export default function TOTPScreen() {
             onChangeText={onSecretKeyChange}
             multiline
           />
-          <Button title="Generate Random Secret" onPress={generateSecretKey} />
+          <Button
+            title="Generate Random Secret"
+            onPress={generateSecretKey}
+            style={{ marginTop: 12 }}
+          />
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>TOTP Code</Text>
           <View style={styles.otpContainer}>
-            <Text style={styles.otpCode}>{totpCode || '------'}</Text>
+            <Text selectable style={styles.otpCode}>
+              {totpCode || '------'}
+            </Text>
             <Text style={styles.timer}>Expires in: {timeRemaining}s</Text>
             <ProgressBar
-              progress={progressPercentage / PERCENTAGE_MULTIPLIER}
+              progress={progress / 100}
               width={null}
               height={PROGRESS_BAR_HEIGHT}
               color={progressColor}
@@ -165,7 +162,11 @@ export default function TOTPScreen() {
             keyboardType="numeric"
             maxLength={7}
           />
-          <Button title="Validate" onPress={validateOTP} />
+          <Button
+            title="Validate"
+            onPress={validateOTP}
+            style={{ marginTop: 12 }}
+          />
           {validationResult !== null && (
             <Text
               style={[
@@ -207,7 +208,7 @@ export default function TOTPScreen() {
           </Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
