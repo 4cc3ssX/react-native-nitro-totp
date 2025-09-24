@@ -1,7 +1,8 @@
 import { NitroModules } from 'react-native-nitro-modules';
 import type { NitroSecret as NitroSecretType } from './specs/NitroSecret.nitro';
 import type { GenerateSecretKeyOptions } from './types';
-import { NitroTotpConstants } from './constants';
+import { NitroTotpConstants, SecretSizeBytes } from './constants';
+import { SecretSize } from './types';
 
 /**
  * NitroSecret class that provides methods for generating cryptographically secure secrets.
@@ -16,34 +17,73 @@ export class NitroSecret {
 
   /**
    * Generates a cryptographically secure random secret key.
-   *
    * @param options - Optional parameters for secret generation.
    * @returns The generated secret as a Base32-encoded string.
    */
   generate(options: GenerateSecretKeyOptions = {}): string {
-    if (!options.length) {
-      options.length = NitroTotpConstants.DEFAULT_SECRET_SIZE;
+    const size = options.size ?? NitroTotpConstants.DEFAULT_SECRET_SIZE;
+    const sizeInBytes = this.convertToBytes(size);
+
+    return this.nitroSecret.generate({ size: sizeInBytes });
+  }
+
+  /**
+   * Validates if the given secret key has a valid format.
+   * @param secretKey - The secret key to check.
+   * @param options - Optional parameters for secret validation.
+   * @returns True if the secret key format is valid, false otherwise.
+   */
+  isValid(secretKey: string, options: GenerateSecretKeyOptions = {}): boolean {
+    if (!options.size) {
+      options.size = SecretSize.STANDARD;
     }
 
-    return this.nitroSecret.generate(options);
+    const cleanedKey = secretKey.replace(/[-=\s]/g, '').toUpperCase();
+    const expectedLength = this.getExpectedLength(options.size);
+
+    return cleanedKey.length === expectedLength;
   }
 
   /**
-   * Generates a secret key with default length.
-   *
-   * @returns A Base32-encoded secret key with default length.
+   * Determines expected Base32 character length for validation.
+   * Returns one of the standard lengths if no specific size is provided.
    */
-  generateDefault(): string {
-    return this.generate({ length: NitroTotpConstants.DEFAULT_SECRET_SIZE });
+  private getExpectedLength(size: number | SecretSize): number {
+    const sizeInBytes = this.convertToBytes(size);
+    return Math.ceil((sizeInBytes * 8) / 5);
   }
 
   /**
-   * Generates a secret key with specified length.
-   *
-   * @param length - The length of the secret in bytes.
-   * @returns A Base32-encoded secret key with the specified length.
+   * Converts SecretSize enum or raw bytes to validated byte count.
+   * Centralizes all size conversion and validation logic.
    */
-  generateWithLength(length: number): string {
-    return this.generate({ length });
+  private convertToBytes(size: number | SecretSize): number {
+    if (typeof size !== 'number') {
+      throw new Error('Invalid secret size type');
+    }
+
+    // Handle enum values first
+    if (size in SecretSize) {
+      return SecretSizeBytes[size as SecretSize];
+    }
+
+    // Handle raw byte values with validation
+    this.validateByteSize(size);
+    return size;
+  }
+
+  /**
+   * Validates byte size against allowed standard sizes.
+   * Throws descriptive error for invalid sizes to guide developers.
+   */
+  private validateByteSize(size: number): void {
+    const validBytes = Object.values(SecretSizeBytes);
+
+    if (!validBytes.includes(size as any)) {
+      const sizeInfo = Object.entries(SecretSizeBytes)
+        .map(([key, bytes]) => `${SecretSize[key as any]}=${bytes}bytes`)
+        .join(', ');
+      throw new Error(`Secret size must be one of: ${sizeInfo}`);
+    }
   }
 }

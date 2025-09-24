@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.0.0](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.4.0...v2.0.0) (2025-09-24)
+
+### 🚀 Features
+
+* rename secret key length to secret key size + added COMPACT, STANDARD, and EXTENDED sizes ([8f8a422](https://github.com/4cc3ssX/react-native-nitro-totp/commit/8f8a422507c37da2ecba777f6f0c218978b90a03))
+
+### 🐛 Bug Fixes
+
+* add validation for window and counter options ([ff154e6](https://github.com/4cc3ssX/react-native-nitro-totp/commit/ff154e684c80bab9233b3430b457163b4be626f4))
+* counter should allow zero values ([8235969](https://github.com/4cc3ssX/react-native-nitro-totp/commit/82359695f15c1cebc4b23cdb5953466fa8cf4ef7))
+* improve secret generation + move isSecretKeyValid to NitroSecret class ([f455bf9](https://github.com/4cc3ssX/react-native-nitro-totp/commit/f455bf9bd531e1c5378ca9cf6efd775bf83c68cf))
+
+### 🧹 Chore
+
+* add assets to package.json files ([82d3547](https://github.com/4cc3ssX/react-native-nitro-totp/commit/82d35472b8f9ad8139b1b12f9f5042674af5db1a))
+* improve example + README.md ([1d5832f](https://github.com/4cc3ssX/react-native-nitro-totp/commit/1d5832f6fad2df88f4d50c3914650541b5eb6f7f))
+* override resolution for conventional-changelog-conventionalcommits ([2a218ae](https://github.com/4cc3ssX/react-native-nitro-totp/commit/2a218ae0d52069f553e8918d1ea2c80c5af8108a))
+* remove --only-version flag from release-it ([8ab2c8a](https://github.com/4cc3ssX/react-native-nitro-totp/commit/8ab2c8a3b76fe17a49abafa4fd33fd0e914981ba))
+* remove unnecessary comments ([73773ff](https://github.com/4cc3ssX/react-native-nitro-totp/commit/73773ff6ac6fe59195910779a076b09566c33edd))
+* use release it json instead of package json config ([133a0d7](https://github.com/4cc3ssX/react-native-nitro-totp/commit/133a0d76fe6c661ff93e4f83054ea0a5d7324b21))
+
+### 📚 Documentation
+
+* update CHANGELOG.md with latest releases ([a0b52f6](https://github.com/4cc3ssX/react-native-nitro-totp/commit/a0b52f66e9e2444a827d07152119b3692c161983))
+* update SECURITY.md file ([14a438e](https://github.com/4cc3ssX/react-native-nitro-totp/commit/14a438ea78f101a1114793ae0e6203be141e7727))
+
 ## [v1.4.0](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.3.0...v1.4.0) (2025-09-23)
 
 ### 🚀 Features

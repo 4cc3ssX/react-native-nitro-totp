@@ -1,0 +1,3 @@
+export const TotpConfigs = {
+  DEFAULT_SECRET_KEY: 'DTUME7GZ6HN4HG3VBB4PLDWG2WZVD5IW',
+};

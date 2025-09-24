@@ -1,19 +1,5 @@
 import { defaultOptions } from './constants';
-import type { BaseGenerateOptions, GenerateSecretKeyOptions } from './types';
-
-/**
- * Calculates the expected length of a Base32-encoded string given the input byte length.
- *
- * @param {number} byteLength - The length of the input in bytes.
- * @returns {number} The expected length of the Base32-encoded string.
- */
-const getBase32EncodedLength = (byteLength: number): number => {
-  const bits = byteLength * 8;
-  const base32Digits = Math.ceil(bits / 5);
-  // Base32 padding ensures the length is a multiple of 8
-  const paddingLength = (8 - (base32Digits % 8)) % 8;
-  return base32Digits + paddingLength;
-};
+import type { BaseGenerateOptions } from './types';
 
 /**
  * Checks if the given OTP (One-Time Password) has a valid format.
@@ -22,35 +8,13 @@ const getBase32EncodedLength = (byteLength: number): number => {
  * @param {GenerateOptions} [options=defaultOptions] - The options for OTP generation (optional).
  * @returns {boolean} True if the OTP format is valid, false otherwise.
  */
-export const isOTPValid = (
+export const isValidOTP = (
   otp: string,
-  options: BaseGenerateOptions = defaultOptions
+  options: BaseGenerateOptions
 ): boolean => {
   const cleanedOtp = otp.replace(/\D+/g, '');
   const digits = options.digits || defaultOptions.digits;
   return cleanedOtp.length === digits;
-};
-
-/**
- * Checks if the given secret key has a valid format.
- *
- * @param {string} secretKey - The secret key to check.
- * @param {GenerateSecretKeyOptions} [options=defaultOptions] - The options for secret key generation (optional).
- * @returns {boolean} True if the secret key format is valid, false otherwise.
- */
-export const isSecretKeyValid = (
-  secretKey: string,
-  options: GenerateSecretKeyOptions = defaultOptions
-): boolean => {
-  const cleanedKey = secretKey.replace(/[-=\s]/g, '').toUpperCase();
-  const lengthInBytes = options.length || defaultOptions.length;
-  const expectedLength = getBase32EncodedLength(lengthInBytes);
-  if (cleanedKey.length !== expectedLength) {
-    return false;
-  }
-  // Check if the secret key contains only valid Base32 characters
-  const base32Regex = /^[A-Z2-7]+$/;
-  return base32Regex.test(cleanedKey);
 };
 
 /**
@@ -61,7 +25,6 @@ export const isSecretKeyValid = (
  */
 export const formatSecretKey = (secretKey: string): string => {
   const cleanedKey = secretKey.replace(/[-=\s]/g, '').toUpperCase();
-  // Group the secret key into chunks of 4 characters
   return cleanedKey.match(/.{1,4}/g)?.join('-') ?? secretKey;
 };
 
@@ -73,7 +36,6 @@ export const formatSecretKey = (secretKey: string): string => {
  */
 export const formatOTP = (otp: string): string => {
   const cleanedOtp = otp.replace(/\D+/g, '');
-  // Group digits in the OTP (e.g., '123456' => '123 456')
   return cleanedOtp.replace(/(\d{3})(?=\d)/g, '$1 ');
 };
 

@@ -29,11 +29,11 @@ namespace margelo::nitro::totp {
    */
   struct GenerateSecretKeyOptions {
   public:
-    std::optional<double> length     SWIFT_PRIVATE;
+    std::optional<double> size     SWIFT_PRIVATE;
 
   public:
     GenerateSecretKeyOptions() = default;
-    explicit GenerateSecretKeyOptions(std::optional<double> length): length(length) {}
+    explicit GenerateSecretKeyOptions(std::optional<double> size): size(size) {}
   };
 
 } // namespace margelo::nitro::totp
@@ -46,12 +46,12 @@ namespace margelo::nitro {
     static inline margelo::nitro::totp::GenerateSecretKeyOptions fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::totp::GenerateSecretKeyOptions(
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "length"))
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "size"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::totp::GenerateSecretKeyOptions& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "length", JSIConverter<std::optional<double>>::toJSI(runtime, arg.length));
+      obj.setProperty(runtime, "size", JSIConverter<std::optional<double>>::toJSI(runtime, arg.size));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -59,7 +59,7 @@ namespace margelo::nitro {
         return false;
       }
       jsi::Object obj = value.getObject(runtime);
-      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "length"))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "size"))) return false;
       return true;
     }
   };

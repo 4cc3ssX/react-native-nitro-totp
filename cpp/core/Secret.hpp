@@ -10,19 +10,16 @@ public:
   Secret(const std::vector<uint8_t> &buffer = std::vector<uint8_t>(),
          size_t size = 20);
 
-  // Static methods to create a Secret object from various encodings.
   static Secret fromLatin1(const std::string &str);
   static Secret fromUTF8(const std::string &str);
   static Secret fromBase32(const std::string &str);
   static Secret fromHex(const std::string &str);
 
-  // Getter methods for various encoded string representations.
   std::string getLatin1() const;
   std::string getUTF8() const;
   std::string getBase32() const;
   std::string getHex() const;
 
-  // Getter for the secret key buffer.
   const std::vector<uint8_t> &getBytes() const;
 
   // Static method to generate random bytes.
@@ -31,8 +28,6 @@ public:
 private:
   // Secret key bytes.
   std::vector<uint8_t> bytes;
-
-  // Helper methods to encode/decode.
   static std::vector<uint8_t> latin1Decode(const std::string &str);
   static std::vector<uint8_t> utf8Decode(const std::string &str);
   static std::vector<uint8_t> base32Decode(const std::string &str);

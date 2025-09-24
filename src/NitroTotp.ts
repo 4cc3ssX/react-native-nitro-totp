@@ -71,11 +71,15 @@ export class NitroTotp {
       options.algorithm = NitroTotpConstants.DEFAULT_ALGORITHM;
     }
 
-    if (options.window === undefined || options.window === null) {
+    if (
+      options.window === undefined ||
+      options.window === null ||
+      options.window < 0
+    ) {
       options.window = NitroTotpConstants.DEFAULT_WINDOW;
     }
 
-    if (!options.currentTime) {
+    if (!options.currentTime || options.currentTime < 0) {
       options.currentTime = Math.floor(Date.now() / 1000);
     }
 

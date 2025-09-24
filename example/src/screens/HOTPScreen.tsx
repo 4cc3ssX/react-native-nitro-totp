@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, View, Text, ScrollView, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { Button, Input, QRCode } from '../components';
 
@@ -9,21 +8,19 @@ import { colors } from '../theme/colors';
 import {
   formatOTP,
   formatSecretKey,
-  isSecretKeyValid,
   NitroHotp,
   parseSecretKey,
   SupportedAlgorithm,
   NitroSecret,
 } from 'react-native-nitro-totp';
-
-const DEFAULT_SECRET_KEY = 'JBSWY3DPEHPK3PXP';
+import { TotpConfigs } from '../configs/totp';
 
 const nitroHotp = new NitroHotp();
 const nitroSecret = new NitroSecret();
 
 export default function HOTPScreen() {
   const [secretKey, setSecretKey] = useState<string>(
-    formatSecretKey(DEFAULT_SECRET_KEY)
+    formatSecretKey(TotpConfigs.DEFAULT_SECRET_KEY)
   );
   const [hotpCode, setHotpCode] = useState<string>('');
   const [hotpCounter, setHotpCounter] = useState<number>(0);
@@ -73,16 +70,10 @@ export default function HOTPScreen() {
     if (!secretKey || !testOtp) return;
 
     const secret = parseSecretKey(secretKey);
-    // For HOTP validation, we need to check against a range of counters
-    // since the counter might be out of sync
-    let isValid = false;
-    for (let i = Math.max(0, hotpCounter - 10); i <= hotpCounter + 10; i++) {
-      const code = nitroHotp.generate(secret, { counter: i });
-      if (formatOTP(code) === testOtp) {
-        isValid = true;
-        break;
-      }
-    }
+    const otp = testOtp.replace(/\s+/g, '');
+    const isValid = nitroHotp.validate(secret, otp, {
+      counter: hotpCounter,
+    });
     setValidationResult(isValid);
   }, [secretKey, testOtp, hotpCounter]);
 
@@ -93,7 +84,7 @@ export default function HOTPScreen() {
 
   const onSecretKeyChange = (text: string) => {
     setSecretKey(text);
-    if (isSecretKeyValid(text)) {
+    if (nitroSecret.isValid(text)) {
       generateAuthURL();
     }
   };
@@ -104,11 +95,11 @@ export default function HOTPScreen() {
   };
 
   useEffect(() => {
-    generateAuthURL(DEFAULT_SECRET_KEY);
+    generateAuthURL(TotpConfigs.DEFAULT_SECRET_KEY);
   }, [generateAuthURL]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Secret Key</Text>
@@ -118,7 +109,11 @@ export default function HOTPScreen() {
             onChangeText={onSecretKeyChange}
             multiline
           />
-          <Button title="Generate Random Secret" onPress={generateSecretKey} />
+          <Button
+            title="Generate Random Secret"
+            onPress={generateSecretKey}
+            style={{ marginTop: 12 }}
+          />
         </View>
 
         <View style={styles.section}>
@@ -159,7 +154,11 @@ export default function HOTPScreen() {
             keyboardType="numeric"
             maxLength={7}
           />
-          <Button title="Validate" onPress={validateOTP} />
+          <Button
+            title="Validate"
+            onPress={validateOTP}
+            style={{ marginTop: 12 }}
+          />
           {validationResult !== null && (
             <Text
               style={[
@@ -205,7 +204,7 @@ export default function HOTPScreen() {
           </Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

@@ -8,18 +8,14 @@
 
 namespace margelo::nitro::totp {
 
-// Generates an OTP
 std::string HybridNitroHotp::generate(const std::string &secret,
                                       const NitroHOTPGenerateOptions &options) {
-  // Set default values
   int digits = options.digits.value();
   std::string algorithm = Utils::getAlgorithmName(options.algorithm.value());
   uint64_t counter = options.counter.value();
 
-  // Decode the secret
   std::vector<uint8_t> key = Secret::fromBase32(secret).getBytes();
 
-  // Convert counter to byte array (big-endian)
   uint8_t data[8];
   uint64_t counterCopy = counter;
   for (int i = 7; i >= 0; --i) {
@@ -27,11 +23,9 @@ std::string HybridNitroHotp::generate(const std::string &secret,
     counterCopy >>= 8;
   }
 
-  // Compute HMAC
   std::vector<uint8_t> hmacResult =
       HMAC::compute(algorithm, key, std::vector<uint8_t>(data, data + 8));
 
-  // Dynamic truncation
   int offset = hmacResult[hmacResult.size() - 1] & 0x0F;
   uint32_t binaryCode = ((hmacResult[offset] & 0x7F) << 24) |
                         ((hmacResult[offset + 1] & 0xFF) << 16) |
@@ -40,11 +34,9 @@ std::string HybridNitroHotp::generate(const std::string &secret,
 
   uint32_t otp = binaryCode % static_cast<uint32_t>(std::pow(10, digits));
 
-  // Format OTP with leading zeros
   return Utils::formatOtp(otp, digits);
 }
 
-// Validates the OTP
 bool HybridNitroHotp::validate(const std::string &secret,
                                const std::string &otp,
                                const NitroHOTPValidateOptions &options) {
@@ -58,10 +50,8 @@ bool HybridNitroHotp::validate(const std::string &secret,
   for (int i = -window; i <= window; ++i) {
     uint64_t testCounter = counter + i;
 
-    // Create GenerateOptions
     NitroHOTPGenerateOptions generationOptions(testCounter, digits, algorithm);
 
-    // Generate OTP for the test counter
     std::string generatedOtp = generate(secret, generationOptions);
 
     if (generatedOtp == otp) {

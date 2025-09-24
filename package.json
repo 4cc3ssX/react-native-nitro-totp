@@ -1,6 +1,6 @@
 {
   "name": "react-native-nitro-totp",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "React Native module for TOTP (Time-based One-Time Password) and HOTP (HMAC-based One-Time Password) authentication.",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
@@ -13,6 +13,7 @@
     "./package.json": "./package.json"
   },
   "files": [
+    "assets",
     "src",
     "lib",
     "android",
@@ -41,7 +42,7 @@
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
     "prepare": "bob build",
     "nitrogen": "nitrogen",
-    "release": "release-it --only-version"
+    "release": "release-it"
   },
   "keywords": [
     "react-native",
@@ -67,6 +68,9 @@
   "homepage": "https://github.com/4cc3ssX/react-native-nitro-totp#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
+  },
+  "resolutions": {
+    "conventional-changelog-conventionalcommits": "8.0.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",

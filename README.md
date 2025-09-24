@@ -2,6 +2,12 @@
 
 A high-performance React Native library for generating and validating Time-based One-Time Passwords (TOTP) and HMAC-based One-Time Passwords (HOTP) using [Nitro Modules](https://nitro.margelo.com/) for native performance.
 
+## Demo
+
+| TOTP | HOTP | Timezone |
+|------|------|----------|
+| <img src="./assets/totp-demo-ios.png" alt="TOTP Demo" width="300" /> | <img src="./assets/hotp-demo-ios.png" alt="HOTP Demo" width="300" /> | <img src="./assets/timezone-demo-ios.png" alt="Timezone Demo" width="300" /> |
+
 ## Features
 
 - 🚀 **Native Performance**: Built with Nitro Modules for maximum performance
@@ -35,12 +41,13 @@ pnpm add react-native-nitro-totp react-native-nitro-modules
 import {
   formatOTP,
   formatSecretKey,
-  isSecretKeyValid,
+  isValidSecretKey,
   NitroSecret,
   NitroTotp,
   NitroHotp,
   parseSecretKey,
   SupportedAlgorithm,
+  SecretSize,
 } from 'react-native-nitro-totp';
 
 // Create instances
@@ -48,9 +55,14 @@ const nitroSecret = new NitroSecret();
 const nitroTotp = new NitroTotp();
 const nitroHotp = new NitroHotp();
 
-// Generate a secret key
+// Generate a secret key (default: 32 characters)
 const secretKey = nitroSecret.generate();
 const formattedSecret = formatSecretKey(secretKey);
+
+// Or generate specific sizes
+const compactSecret = nitroSecret.generate({ size: SecretSize.COMPACT });   // 26 chars
+const standardSecret = nitroSecret.generate({ size: SecretSize.STANDARD }); // 32 chars
+const extendedSecret = nitroSecret.generate({ size: SecretSize.EXTENDED }); // 52 chars
 
 // Generate TOTP
 const totpCode = nitroTotp.generate(parseSecretKey(formattedSecret));
@@ -75,12 +87,12 @@ import { View, Text, Button, TextInput } from 'react-native';
 import {
   formatOTP,
   formatSecretKey,
-  isSecretKeyValid,
   NitroSecret,
   NitroTotp,
   NitroHotp,
   parseSecretKey,
   SupportedAlgorithm,
+  SecretSize,
 } from 'react-native-nitro-totp';
 
 export default function TotpExample() {
@@ -93,16 +105,29 @@ export default function TotpExample() {
   const nitroTotp = new NitroTotp();
   const nitroHotp = new NitroHotp();
 
-  // Generate a new secret key
+  // Generate a new secret key (standard 32-character by default)
   const generateSecret = () => {
     const secret = nitroSecret.generate();
     const formatted = formatSecretKey(secret);
     setSecretKey(formatted);
   };
 
+  // Generate different secret sizes
+  const generateCompactSecret = () => {
+    const secret = nitroSecret.generate({ size: SecretSize.COMPACT }); // 26 chars
+    setSecretKey(formatSecretKey(secret));
+  };
+
+  const generateExtendedSecret = () => {
+    const secret = nitroSecret.generate({ size: SecretSize.EXTENDED }); // 52 chars
+    setSecretKey(formatSecretKey(secret));
+  };
+    setSecretKey(formatted);
+  };
+
   // Generate TOTP code
   const generateTOTP = useCallback(() => {
-    if (!secretKey || !isSecretKeyValid(secretKey)) return;
+    if (!secretKey || !nitroSecret.isValid(secretKey)) return;
 
     const secret = parseSecretKey(secretKey);
     const code = nitroTotp.generate(secret);
@@ -172,6 +197,9 @@ const nitroSecret = new NitroSecret();
 
 // Generate a new secret key
 const secret = nitroSecret.generate(options?: GenerateSecretKeyOptions);
+
+// Validate secret key format
+const isValid = nitroSecret.isValid(secretKey: string, options?: GenerateSecretKeyOptions);
 ```
 
 #### `NitroTotp`
@@ -220,11 +248,8 @@ formatSecretKey(secret: string): string // "JBSWY3DP..." → "JBSW-Y3DP-..."
 // Parse formatted secret key back to plain string
 parseSecretKey(secret: string): string // "JBSW-Y3DP-..." → "JBSWY3DP..."
 
-// Validate secret key format
-isSecretKeyValid(secret: string, options?: GenerateSecretKeyOptions): boolean
-
 // Validate OTP format
-isOTPValid(otp: string, options?: BaseGenerateOptions): boolean
+isValidOTP(otp: string, options?: BaseGenerateOptions): boolean
 ```
 
 ### Types and Interfaces
@@ -236,6 +261,16 @@ enum SupportedAlgorithm {
   SHA1 = 0,    // Default, most compatible
   SHA256 = 1,  // More secure
   SHA512 = 2,  // Most secure
+}
+```
+
+#### Secret Sizes
+
+```ts
+enum SecretSize {
+  COMPACT = 0,   // 16 bytes = 26 Base32 characters (minimum secure)
+  STANDARD = 1,  // 20 bytes = 32 Base32 characters (most common)
+  EXTENDED = 2,  // 32 bytes = 52 Base32 characters (high security)
 }
 ```
 
@@ -256,9 +291,11 @@ interface NitroHOTPGenerateOptions extends BaseGenerateOptions {
   counter?: number;             // Default: 0
 }
 
+```ts
 interface GenerateSecretKeyOptions {
-  length?: number;              // Default: 20 bytes
+  size?: number | SecretSize;   // Default: SecretSize.STANDARD (20 bytes = 32 chars)
 }
+```
 ```
 
 #### Validation Options
@@ -293,17 +330,45 @@ interface OTPAuthURLOptions extends BaseGenerateOptions {
 
 ## Usage Examples
 
+### Secret Key Generation
+
+```ts
+import { NitroSecret, SecretSize, formatSecretKey } from 'react-native-nitro-totp';
+
+const nitroSecret = new NitroSecret();
+
+// Generate standard 32-character secret (default, most common)
+const standardSecret = nitroSecret.generate();
+const formattedStandard = formatSecretKey(standardSecret); // e.g., "JBSW-Y3DP-EHPK-3PXP-..."
+
+// Generate different sizes using enum
+const compactSecret = nitroSecret.generate({ size: SecretSize.COMPACT });   // 26 chars (minimum secure)
+const extendedSecret = nitroSecret.generate({ size: SecretSize.EXTENDED }); // 52 chars (high security)
+
+// Or using raw byte values (backward compatibility)
+const customSecret = nitroSecret.generate({ size: 20 }); // 32 chars (same as STANDARD)
+
+console.log('Compact (26 chars):', formatSecretKey(compactSecret));
+console.log('Standard (32 chars):', formatSecretKey(standardSecret));
+console.log('Extended (52 chars):', formatSecretKey(extendedSecret));
+```
+
 ### Basic TOTP
 
 ```ts
-import { NitroSecret, NitroTotp, formatOTP, parseSecretKey } from 'react-native-nitro-totp';
+import { NitroSecret, NitroTotp, formatOTP, parseSecretKey, SecretSize } from 'react-native-nitro-totp';
 
 const nitroSecret = new NitroSecret();
 const nitroTotp = new NitroTotp();
 
+// Generate secret (32 chars by default)
 const secret = nitroSecret.generate();
 const code = nitroTotp.generate(secret);
 const formattedCode = formatOTP(code); // "123 456"
+
+// Or generate with specific size
+const compactSecret = nitroSecret.generate({ size: SecretSize.COMPACT }); // 26 chars
+const compactCode = nitroTotp.generate(compactSecret);
 ```
 
 ### Custom TOTP with SHA256
@@ -445,6 +510,9 @@ const isValidInTokyo = validateForTimeZone(secret, userEnteredOTP, 9);
    - Consider using libraries like `react-native-keychain`
 
 2. **Secret Key Generation**: Use the built-in `NitroSecret.generate()` for cryptographically secure keys
+   - Default (32 chars): `nitroSecret.generate()` - Most compatible
+   - Compact (26 chars): `nitroSecret.generate({ size: SecretSize.COMPACT })` - Minimum secure
+   - Extended (52 chars): `nitroSecret.generate({ size: SecretSize.EXTENDED })` - High security
 
 3. **Validation Windows**: Use appropriate time windows - larger windows are more user-friendly but less secure
 
@@ -468,11 +536,13 @@ const isValidInTokyo = validateForTimeZone(secret, userEnteredOTP, 9);
 ### Error Handling
 
 ```ts
-import { isSecretKeyValid, isOTPValid } from 'react-native-nitro-totp';
+import { isValidOTP, NitroSecret } from 'react-native-nitro-totp';
+
+const nitroSecret = new NitroSecret();
 
 const generateTOTP = (secretKey: string) => {
   // Validate secret key first
-  if (!isSecretKeyValid(secretKey)) {
+  if (!nitroSecret.isValid(secretKey)) {
     throw new Error('Invalid secret key format');
   }
 
@@ -487,11 +557,11 @@ const generateTOTP = (secretKey: string) => {
 
 const validateTOTP = (secretKey: string, otp: string) => {
   // Validate inputs
-  if (!isSecretKeyValid(secretKey)) {
+  if (!nitroSecret.isValid(secretKey)) {
     return { valid: false, error: 'Invalid secret key' };
   }
 
-  if (!isOTPValid(otp)) {
+  if (!isValidOTP(otp)) {
     return { valid: false, error: 'Invalid OTP format' };
   }
 

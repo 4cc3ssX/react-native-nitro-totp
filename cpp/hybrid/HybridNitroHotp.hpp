@@ -10,11 +10,9 @@ public:
   HybridNitroHotp() : HybridObject(TAG) {}
 
 public:
-  // Generates an OTP based on the secret key and options
   std::string generate(const std::string &secret,
                        const NitroHOTPGenerateOptions &options) override;
 
-  // Validates the OTP based on the secret key and options
   bool validate(const std::string &secret, const std::string &otp,
                 const NitroHOTPValidateOptions &options) override;
 
