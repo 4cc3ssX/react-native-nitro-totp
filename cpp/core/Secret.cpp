@@ -3,21 +3,17 @@
 #include <algorithm>
 #include <random>
 #include <stdexcept>
+#include <openssl/rand.h>
 
-// Utility function to generate random bytes.
 std::vector<uint8_t> Secret::generateRandomBytes(size_t size) {
-  std::random_device rd;
-  std::mt19937 generator(rd());
-  std::uniform_int_distribution<uint8_t> distribution(0, 255);
-
   std::vector<uint8_t> randomBytes(size);
-  std::generate(randomBytes.begin(), randomBytes.end(),
-                [&]() { return distribution(generator); });
+  if (RAND_bytes(randomBytes.data(), static_cast<int>(size)) != 1) {
+    throw std::runtime_error("Failed to generate secure random bytes");
+  }
 
   return randomBytes;
 }
 
-// Constructor
 Secret::Secret(const std::vector<uint8_t> &buffer, size_t size) {
   if (buffer.empty()) {
     bytes = generateRandomBytes(size);
@@ -26,7 +22,6 @@ Secret::Secret(const std::vector<uint8_t> &buffer, size_t size) {
   }
 }
 
-// Static methods to create Secret objects from various encodings.
 Secret Secret::fromLatin1(const std::string &str) {
   return Secret(latin1Decode(str));
 }
@@ -43,7 +38,6 @@ Secret Secret::fromHex(const std::string &str) {
   return Secret(hexDecode(str));
 }
 
-// Getter methods for encoded string representations.
 std::string Secret::getLatin1() const { return latin1Encode(bytes); }
 
 std::string Secret::getUTF8() const { return utf8Encode(bytes); }
@@ -52,18 +46,13 @@ std::string Secret::getBase32() const { return base32Encode(bytes); }
 
 std::string Secret::getHex() const { return hexEncode(bytes); }
 
-// Getter for the secret key buffer.
 const std::vector<uint8_t> &Secret::getBytes() const { return bytes; }
 
-// Helper methods for encoding and decoding - Placeholder implementations
-
 std::vector<uint8_t> Secret::latin1Decode(const std::string &str) {
-  // Placeholder implementation for Latin1 decoding.
   return std::vector<uint8_t>(str.begin(), str.end());
 }
 
 std::vector<uint8_t> Secret::utf8Decode(const std::string &str) {
-  // Placeholder implementation for UTF-8 decoding.
   return std::vector<uint8_t>(str.begin(), str.end());
 }
 
@@ -72,7 +61,6 @@ std::vector<uint8_t> Secret::base32Decode(const std::string &str) {
 }
 
 std::vector<uint8_t> Secret::hexDecode(const std::string &str) {
-  // Placeholder implementation for Hex decoding.
   std::vector<uint8_t> result;
   for (size_t i = 0; i < str.size(); i += 2) {
     std::string byte = str.substr(i, 2);
@@ -82,12 +70,10 @@ std::vector<uint8_t> Secret::hexDecode(const std::string &str) {
 }
 
 std::string Secret::latin1Encode(const std::vector<uint8_t> &bytes) {
-  // Placeholder implementation for Latin1 encoding.
   return std::string(bytes.begin(), bytes.end());
 }
 
 std::string Secret::utf8Encode(const std::vector<uint8_t> &bytes) {
-  // Placeholder implementation for UTF-8 encoding.
   return std::string(bytes.begin(), bytes.end());
 }
 
@@ -96,7 +82,6 @@ std::string Secret::base32Encode(const std::vector<uint8_t> &bytes) {
 }
 
 std::string Secret::hexEncode(const std::vector<uint8_t> &bytes) {
-  // Hex encoding implementation.
   static const char *const lut = "0123456789ABCDEF";
   size_t len = bytes.size();
   std::string result;
