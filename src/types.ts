@@ -4,6 +4,12 @@ export enum SupportedAlgorithm {
   SHA512,
 }
 
+export enum SecretSize {
+  COMPACT = 0,
+  STANDARD = 1,
+  EXTENDED = 2,
+}
+
 export interface OTPAuthURLOptions extends BaseGenerateOptions {
   /**
    * The issuer of the secret key.
@@ -47,11 +53,10 @@ export interface OTPAuthURLOptions extends BaseGenerateOptions {
 
 export interface GenerateSecretKeyOptions {
   /**
-   * The length of the secret key in bytes.
+   * The size of the secret key.
    * @type {number}
-   * @default 12
    */
-  length?: number;
+  size?: number;
 }
 
 export interface NitroTotpGenerateOptions extends BaseGenerateOptions {
