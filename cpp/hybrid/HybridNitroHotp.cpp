@@ -9,7 +9,7 @@
 namespace margelo::nitro::totp {
 
 std::string HybridNitroHotp::generate(const std::string &secret,
-                                      const NitroHOTPGenerateOptions &options) {
+                                      const NitroHotpGenerateOptions &options) {
   int digits = options.digits.value();
   std::string algorithm = Utils::getAlgorithmName(options.algorithm.value());
   uint64_t counter = options.counter.value();
@@ -39,7 +39,7 @@ std::string HybridNitroHotp::generate(const std::string &secret,
 
 bool HybridNitroHotp::validate(const std::string &secret,
                                const std::string &otp,
-                               const NitroHOTPValidateOptions &options) {
+                               const NitroHotpValidateOptions &options) {
 
   // Default values
   int digits = options.digits.value();
@@ -50,7 +50,7 @@ bool HybridNitroHotp::validate(const std::string &secret,
   for (int i = -window; i <= window; ++i) {
     uint64_t testCounter = counter + i;
 
-    NitroHOTPGenerateOptions generationOptions(testCounter, digits, algorithm);
+    NitroHotpGenerateOptions generationOptions(testCounter, digits, algorithm);
 
     std::string generatedOtp = generate(secret, generationOptions);
 

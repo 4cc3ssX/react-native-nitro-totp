@@ -267,10 +267,10 @@ Handles HMAC-based One-Time Password operations.
 const nitroHotp = new NitroHotp();
 
 // Generate HOTP
-const code = nitroHotp.generate(secret: string, options?: NitroHOTPGenerateOptions);
+const code = nitroHotp.generate(secret: string, options?: NitroHotpGenerateOptions);
 
 // Validate HOTP
-const isValid = nitroHotp.validate(secret: string, otp: string, options?: NitroHOTPValidateOptions);
+const isValid = nitroHotp.validate(secret: string, otp: string, options?: NitroHotpValidateOptions);
 
 // Generate Auth URL
 const url = nitroHotp.generateAuthURL(options: OTPAuthURLOptions);
@@ -327,7 +327,7 @@ interface NitroTotpGenerateOptions extends BaseGenerateOptions {
   currentTime?: number;         // Unix timestamp in seconds, defaults to current time
 }
 
-interface NitroHOTPGenerateOptions extends BaseGenerateOptions {
+interface NitroHotpGenerateOptions extends BaseGenerateOptions {
   counter?: number;             // Default: 0
 }
 
@@ -349,7 +349,7 @@ interface NitroTotpValidateOptions extends BaseValidateOptions {
   currentTime?: number;         // Unix timestamp in seconds, defaults to current time
 }
 
-interface NitroHOTPValidateOptions extends BaseValidateOptions {
+interface NitroHotpValidateOptions extends BaseValidateOptions {
   counter?: number;             // Default: 0
 }
 ```

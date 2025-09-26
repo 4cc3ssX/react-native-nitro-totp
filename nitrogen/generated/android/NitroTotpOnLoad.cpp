@@ -16,8 +16,8 @@
 #include <NitroModules/HybridObjectRegistry.hpp>
 
 #include "HybridNitroTotp.hpp"
-#include "HybridNitroSecret.hpp"
 #include "HybridNitroHotp.hpp"
+#include "HybridNitroSecret.hpp"
 
 namespace margelo::nitro::totp {
 
@@ -41,21 +41,21 @@ int initialize(JavaVM* vm) {
       }
     );
     HybridObjectRegistry::registerHybridObjectConstructor(
+      "NitroHotp",
+      []() -> std::shared_ptr<HybridObject> {
+        static_assert(std::is_default_constructible_v<HybridNitroHotp>,
+                      "The HybridObject \"HybridNitroHotp\" is not default-constructible! "
+                      "Create a public constructor that takes zero arguments to be able to autolink this HybridObject.");
+        return std::make_shared<HybridNitroHotp>();
+      }
+    );
+    HybridObjectRegistry::registerHybridObjectConstructor(
       "NitroSecret",
       []() -> std::shared_ptr<HybridObject> {
         static_assert(std::is_default_constructible_v<HybridNitroSecret>,
                       "The HybridObject \"HybridNitroSecret\" is not default-constructible! "
                       "Create a public constructor that takes zero arguments to be able to autolink this HybridObject.");
         return std::make_shared<HybridNitroSecret>();
-      }
-    );
-    HybridObjectRegistry::registerHybridObjectConstructor(
-      "NitroHOTP",
-      []() -> std::shared_ptr<HybridObject> {
-        static_assert(std::is_default_constructible_v<HybridNitroHotp>,
-                      "The HybridObject \"HybridNitroHotp\" is not default-constructible! "
-                      "Create a public constructor that takes zero arguments to be able to autolink this HybridObject.");
-        return std::make_shared<HybridNitroHotp>();
       }
     );
   });

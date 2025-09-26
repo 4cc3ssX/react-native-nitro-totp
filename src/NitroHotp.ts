@@ -1,8 +1,8 @@
 import { NitroModules } from 'react-native-nitro-modules';
-import type { NitroHOTP as NitroHOTPType } from './specs/NitroHotp.nitro';
+import type { NitroHotp as NitroHotpType } from './specs/NitroHotp.nitro';
 import type {
-  NitroHOTPGenerateOptions,
-  NitroHOTPValidateOptions,
+  NitroHotpGenerateOptions,
+  NitroHotpValidateOptions,
   OTPAuthURLOptions,
 } from './types';
 import { SupportedAlgorithm } from './types';
@@ -12,11 +12,11 @@ import { NitroTotpConstants } from './constants';
  * NitroHotp (HMAC-based One-Time Password) class that provides methods for generating and validating HOTPs.
  */
 export class NitroHotp {
-  private nitroHOTP: NitroHOTPType;
+  private nitroHotp: NitroHotpType;
 
   constructor() {
-    this.nitroHOTP =
-      NitroModules.createHybridObject<NitroHOTPType>('NitroHOTP');
+    this.nitroHotp =
+      NitroModules.createHybridObject<NitroHotpType>('NitroHotp');
   }
 
   /**
@@ -26,7 +26,7 @@ export class NitroHotp {
    * @param options - Optional parameters for HOTP generation.
    * @returns The generated HOTP code as a string.
    */
-  generate(secret: string, options: NitroHOTPGenerateOptions = {}): string {
+  generate(secret: string, options: NitroHotpGenerateOptions = {}): string {
     if (!options.digits) {
       options.digits = NitroTotpConstants.DEFAULT_DIGITS;
     }
@@ -39,7 +39,7 @@ export class NitroHotp {
       options.counter = NitroTotpConstants.DEFAULT_COUNTER;
     }
 
-    return this.nitroHOTP.generate(secret, options);
+    return this.nitroHotp.generate(secret, options);
   }
 
   /**
@@ -53,7 +53,7 @@ export class NitroHotp {
   validate(
     secret: string,
     otp: string,
-    options: NitroHOTPValidateOptions = {}
+    options: NitroHotpValidateOptions = {}
   ): boolean {
     if (!options.digits) {
       options.digits = NitroTotpConstants.DEFAULT_DIGITS;
@@ -79,7 +79,7 @@ export class NitroHotp {
       options.counter = NitroTotpConstants.DEFAULT_COUNTER;
     }
 
-    return this.nitroHOTP.validate(secret, otp, options);
+    return this.nitroHotp.validate(secret, otp, options);
   }
 
   /**
