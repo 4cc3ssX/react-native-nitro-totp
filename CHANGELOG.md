@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.1](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v2.0.0...v2.0.1) (2025-09-26)
+
+### 🐛 Bug Fixes
+
+* add quick links in documentation ([c880a12](https://github.com/4cc3ssX/react-native-nitro-totp/commit/c880a123104f4ec1d8d33bcb17bdfd35e69fc6d8))
+* rename to NitroHotp instead of NitroHOTP ([9a01ed9](https://github.com/4cc3ssX/react-native-nitro-totp/commit/9a01ed93c31d913a0e43bf5428b7cee1ed17ffc4))
+
+### 🧹 Chore
+
+* example pod lock ([2d6d449](https://github.com/4cc3ssX/react-native-nitro-totp/commit/2d6d44926d8e6e48083502d7d715f2cd51f05180))
+
+### 📚 Documentation
+
+* update Hotp name in README.md ([e4bac0d](https://github.com/4cc3ssX/react-native-nitro-totp/commit/e4bac0de3df0dec305d31374f927fd257ead0cd8))
+* update README.md quick links ([6c2b09c](https://github.com/4cc3ssX/react-native-nitro-totp/commit/6c2b09c048b43ae1a921081b0fa85e71ea0d04d9))
+
 ## [2.0.0](https://github.com/4cc3ssX/react-native-nitro-totp/compare/v1.4.0...v2.0.0) (2025-09-24)
 
 ### 🚀 Features
