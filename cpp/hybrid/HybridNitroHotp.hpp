@@ -5,20 +5,20 @@
 
 namespace margelo::nitro::totp {
 
-class HybridNitroHotp : public HybridNitroHOTPSpec {
+class HybridNitroHotp : public HybridNitroHotpSpec {
 public:
   HybridNitroHotp() : HybridObject(TAG) {}
 
 public:
   std::string generate(const std::string &secret,
-                       const NitroHOTPGenerateOptions &options) override;
+                       const NitroHotpGenerateOptions &options) override;
 
   bool validate(const std::string &secret, const std::string &otp,
-                const NitroHOTPValidateOptions &options) override;
+                const NitroHotpValidateOptions &options) override;
 
   void loadHybridMethods() override {
     // call base protoype
-    HybridNitroHOTPSpec::loadHybridMethods();
+    HybridNitroHotpSpec::loadHybridMethods();
   }
 };
 } // namespace margelo::nitro::totp

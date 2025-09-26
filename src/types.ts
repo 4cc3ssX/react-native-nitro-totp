@@ -75,7 +75,7 @@ export interface NitroTotpGenerateOptions extends BaseGenerateOptions {
   currentTime?: number;
 }
 
-export interface NitroHOTPGenerateOptions extends BaseGenerateOptions {
+export interface NitroHotpGenerateOptions extends BaseGenerateOptions {
   /**
    * The counter to use for generating the OTP.
    * @type {number}
@@ -109,7 +109,7 @@ export interface BaseValidateOptions extends BaseGenerateOptions {
   window?: number;
 }
 
-export interface NitroHOTPValidateOptions extends BaseValidateOptions {
+export interface NitroHotpValidateOptions extends BaseValidateOptions {
   /**
    * The counter to use for validating the OTP.
    * @type {number}

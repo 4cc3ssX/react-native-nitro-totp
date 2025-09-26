@@ -17,7 +17,7 @@ std::string HybridNitroTotp::generate(const std::string &secret,
 
   uint64_t counter = static_cast<uint64_t>(currentTime) / period;
 
-  NitroHOTPGenerateOptions generateOptions(counter, digits, algorithm);
+  NitroHotpGenerateOptions generateOptions(counter, digits, algorithm);
 
   HybridNitroHotp hybridNitroHotp;
 
@@ -37,7 +37,7 @@ bool HybridNitroTotp::validate(const std::string &secret,
 
   uint64_t counter = static_cast<uint64_t>(currentTime) / period;
 
-  NitroHOTPValidateOptions validateOptions(counter, window, digits, algorithm);
+  NitroHotpValidateOptions validateOptions(counter, window, digits, algorithm);
 
   HybridNitroHotp hybridNitroHotp;
   return hybridNitroHotp.validate(secret, otp, validateOptions);

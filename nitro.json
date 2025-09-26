@@ -12,11 +12,11 @@
     "NitroTotp": {
       "cpp": "HybridNitroTotp"
     },
+    "NitroHotp": {
+      "cpp": "HybridNitroHotp"
+    },
     "NitroSecret": {
       "cpp": "HybridNitroSecret"
-    },
-    "NitroHOTP": {
-      "cpp": "HybridNitroHotp"
     }
   },
   "ignorePaths": ["node_modules"]
